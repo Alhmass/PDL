@@ -92,6 +92,9 @@ public class ImageController {
     if (img.isEmpty())
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     else {
+      File toDelete = new File("./images/" + img.get().getName());
+      if (toDelete.exists())
+        toDelete.delete();
       this.imageDao.delete(img.get());
       return new ResponseEntity<>(HttpStatus.OK);
     }
