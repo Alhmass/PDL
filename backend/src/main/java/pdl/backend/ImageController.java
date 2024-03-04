@@ -1,6 +1,8 @@
 package pdl.backend;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -35,6 +37,37 @@ public class ImageController {
   @Autowired
   public ImageController(ImageDao imageDao) {
     this.imageDao = imageDao;
+
+    // check if the folder "images" exist
+    File dirImage = new File("./images");
+    if (!dirImage.exists() || !dirImage.isDirectory()) {
+      throw new RuntimeException("The folder images does not exist");
+    }
+
+    // Create the filter ".png" and ".jpg"
+    String[] extensions = { ".jpg", ".png" };
+    ImageFilter filter = new ImageFilter(extensions, 2);
+
+    // Store all the file name who ended with ".png" or ".jpg"
+    String[] files = dirImage.list(filter);
+
+    // Debug Message if the folder "images" doesn't contain ".png" or ".jpg" files
+    if (files.length == 0) {
+      System.out.println("Image Directory empty");
+    }
+
+    // Store all the images in the ImageDao of ImageController
+    for (int i = 0; i < files.length; ++i) {
+      File file = new File("./images/" + files[i]);
+      byte[] byteArray = new byte[(int) file.length()];
+      try (FileInputStream inputStream = new FileInputStream(file)) {
+        inputStream.read(byteArray);
+      } catch (final IOException e) {
+        throw new RuntimeException(e);
+      }
+      Image newImg = new Image(files[i], byteArray);
+      this.imageDao.create(newImg);
+    }
   }
 
   @RequestMapping(value = "/images/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -44,9 +77,9 @@ public class ImageController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     else {
       return ResponseEntity
-              .ok()
-              .contentType(MediaType.IMAGE_JPEG)
-              .body(img.get().getData());
+          .ok()
+          .contentType(MediaType.IMAGE_JPEG)
+          .body(img.get().getData());
     }
   }
 
@@ -70,8 +103,7 @@ public class ImageController {
       Image nimg = new Image(file.getOriginalFilename(), file.getBytes());
       this.imageDao.create(nimg);
       return new ResponseEntity<>(HttpStatus.OK);
-    }
-    else {
+    } else {
       return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
   }
@@ -80,11 +112,11 @@ public class ImageController {
   @ResponseBody
   public ArrayNode getImageList() {
     ArrayNode nodes = mapper.createArrayNode();
-    for (Image item:this.imageDao.retrieveAll()) {
-       ObjectNode node = mapper.createObjectNode();
-       node.put("name", item.getName());
-       node.put("id", item.getId());
-       nodes.add(node);
+    for (Image item : this.imageDao.retrieveAll()) {
+      ObjectNode node = mapper.createObjectNode();
+      node.put("name", item.getName());
+      node.put("id", item.getId());
+      nodes.add(node);
     }
     return nodes;
   }
