@@ -1,17 +1,14 @@
 package pdl.backend;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +32,37 @@ public class ImageController {
   @Autowired
   public ImageController(ImageDao imageDao) {
     this.imageDao = imageDao;
+
+    //check if the folder "images" exist
+    File dirImage = new File("./images");
+		if (!dirImage.exists() || !dirImage.isDirectory()) {
+			throw new RuntimeException("The folder images does not exist");
+		}
+
+    //Create the filter ".png" and ".jpg" 
+		String[] extensions = {".jpg", ".png"};
+		ImageFilter filter = new ImageFilter(extensions, 2);
+
+    //Store all the file name who ended with ".png" or ".jpg"
+		String[] files = dirImage.list(filter);
+
+    //Debug Message if the folder "images" doesn't contain ".png" or ".jpg" files
+		if (files.length == 0){
+			System.out.println("Image Directory empty");
+		}
+
+    //Store all the images in the ImageDao of ImageController
+    for (int i = 0; i < files.length; ++i) {
+      File file = new File("./images/" + files[i]);
+      byte[] byteArray = new byte[(int) file.length()];
+      try (FileInputStream inputStream = new FileInputStream(file)) {
+        inputStream.read(byteArray);
+      } catch (final IOException e){
+        throw new RuntimeException(e);
+      }
+      Image newImg = new Image(files[i], byteArray);
+      this.imageDao.create(newImg);
+    }
   }
 
   @RequestMapping(value = "/images/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
