@@ -3,6 +3,7 @@ package pdl.backend;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -99,9 +100,18 @@ public class ImageController {
   @RequestMapping(value = "/images", method = RequestMethod.POST)
   public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file,
       RedirectAttributes redirectAttributes) throws IOException {
-    if (file.getContentType().equals(MediaType.IMAGE_JPEG_VALUE)) {
+    if (file.getContentType().equals(MediaType.IMAGE_JPEG_VALUE)
+        || file.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
       Image nimg = new Image(file.getOriginalFilename(), file.getBytes());
       this.imageDao.create(nimg);
+      try {
+        FileOutputStream nFile = new FileOutputStream("./images/" + file.getOriginalFilename());
+        nFile.write(file.getBytes());
+        nFile.flush();
+        nFile.close();
+      } catch (IOException e) {
+        throw new RuntimeException("Cannot create file in images folder!");
+      }
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
