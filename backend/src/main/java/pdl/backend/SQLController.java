@@ -1,6 +1,7 @@
 package pdl.backend;
 
-import org.springframework.*;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +21,7 @@ public class SQLController implements InitializingBean{
 		this.jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS images (id bigserial PRIMARY KEY, name char(255), histogram2D vector(360), histogram3D vector(1728))");
 	}
 
-	public void addImage(int id, String name) {
+	public void addImage(long id, String name) {
 		BufferedImage input = UtilImageIO.loadImage(name);
 		Planar<GrayU8> image = ConvertBufferedImage.convertFromPlanar(input, null, true, GrayU8.class);
 		if(input == null) {
@@ -32,11 +33,13 @@ public class SQLController implements InitializingBean{
 		this.jdbcTemplate.update("INSERT INTO image (id, name, histogram2D, histogram3D) VALUES (?, ?, ?, ?)", id, name, h2D, h3D);
 	}
 
+	public void deleteImage(long id) {
+		this.jdbcTemplate.update("DELETE FROM image WHERE `id`=?", id);
+	}
+
 	public int getNbImages() {
 		return this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM images", Integer.class);
 	}
-
-
 
 
 	private static int[] genHistoHueSat(Planar<GrayU8> input) {
@@ -100,36 +103,3 @@ public class SQLController implements InitializingBean{
 		return res;
 	}
 }
-
-
-
-/*
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
-
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    // Drop table
-    jdbcTemplate.execute("DROP TABLE IF EXISTS employee");
-
-    // Create table
-    this.jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS employee (id bigserial PRIMARY KEY, name character varying(255))");
-
-    // Insert rows
-    jdbcTemplate.update("INSERT INTO employee (name) VALUES (?), (?), (?)", (Object[]) names);
-  }
-
-  public int getNbEmployees() {
-    return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM employee", Integer.class);
-  }
-
-  public String getEmployeeName(long id) {
-    return jdbcTemplate.queryForObject("SELECT name FROM employee WHERE id = ?", String.class, id);
-  }
-
-}
- */

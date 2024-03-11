@@ -33,6 +33,7 @@ public class ImageController {
   private ObjectMapper mapper;
 
   private final ImageDao imageDao;
+  private SQLController sqlController;
 
   @Autowired
   public ImageController(ImageDao imageDao) {
@@ -67,6 +68,9 @@ public class ImageController {
       }
       Image newImg = new Image(files[i], byteArray);
       this.imageDao.create(newImg);
+    }
+    for ( Image img : this.imageDao.retrieveAll() ) {
+      this.sqlController.addImage(img.getId(), img.getName());
     }
   }
 
