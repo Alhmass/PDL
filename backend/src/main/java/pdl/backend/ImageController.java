@@ -44,9 +44,9 @@ public class ImageController {
       throw new RuntimeException("The folder images does not exist");
     }
 
-    // Create the filter ".png" and ".jpg"
-    String[] extensions = { ".jpg", ".png" };
-    ImageFilter filter = new ImageFilter(extensions, 2);
+    // Create the filter ".png", ".jpg" and ".jpeg"
+    String[] extensions = { ".jpg", ".png", ".jpeg"};
+    ImageFilter filter = new ImageFilter(extensions, 3);
 
     // Store all the file name who ended with ".png" or ".jpg"
     String[] files = dirImage.list(filter);
