@@ -15,18 +15,7 @@ public class ImageDao implements Dao<Image> {
 
   private final Map<Long, Image> images = new HashMap<>();
 
-  public ImageDao() {
-    // placez une image test.jpg dans le dossier "src/main/resources" du projet
-    final ClassPathResource imgFile = new ClassPathResource("test.jpg");
-    byte[] fileContent;
-    try {
-      fileContent = Files.readAllBytes(imgFile.getFile().toPath());
-      Image img = new Image("logo.jpg", fileContent);
-      images.put(img.getId(), img);
-    } catch (final IOException e) {
-      e.printStackTrace();
-    }
-  }
+  public ImageDao() {}
 
   @Override
   public Optional<Image> retrieve(final long id) {

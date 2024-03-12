@@ -1,7 +1,17 @@
 package pdl.backend;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import pdl.backend.ImageDao;
+
+import org.springframework.jdbc.core.JdbcTemplate; 
 import org.springframework.stereotype.Repository;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+
+import javax.imageio.*;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,30 +21,54 @@ import boofcv.io.image.UtilImageIO;
 import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.Planar;
 
+
+@Repository
 public class SQLController implements InitializingBean{
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	private ImageDao imageDao;
+
+	public SQLController(ImageDao imageDao) {
+		this.imageDao = imageDao;
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		this.jdbcTemplate.execute("DROP TABLE IF EXISTS images");
-		this.jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS images (id bigserial PRIMARY KEY, name char(255), histogram2D vector(360), histogram3D vector(1728))");
+		this.jdbcTemplate.execute(
+		 		"CREATE TABLE IF NOT EXISTS images (id bigserial PRIMARY KEY, name char(255), histogram2D vector(360), histogram3D vector(1728))");
+		System.out.println("table creation\n");
+	
+		for (Image img : this.imageDao.retrieveAll()) {
+			addImage(img);
+		}
 	}
 
-	public void addImage(long id, String name) {
-		BufferedImage input = UtilImageIO.loadImage(name);
-		Planar<GrayU8> image = ConvertBufferedImage.convertFromPlanar(input, null, true, GrayU8.class);
-		if(input == null) {
-			System.err.println("Cannot read input file '" + name);
+	public void addImage(Image img){
+		Planar<GrayU8> input = null;
+		int[] h2D = new int[360];
+		int[] h3D = new int[1728];
+        try {
+            InputStream ImageStream = new ByteArrayInputStream(img.getData());
+            BufferedImage Image = ImageIO.read(ImageStream);
+            input = ConvertBufferedImage.convertFromPlanar(Image, null, true, GrayU8.class);
+			System.out.println("Succed to load "+ img.getName());
+			try {
+				h2D = genHistoHueSat(input);
+				h3D = genHistoRGB(input);
+			}catch (Exception e){
+				System.out.println("Failed to generate histogram : " + img.getName());
+				System.exit(-1);
+			}
+        } catch (Exception e) {
+			System.out.println("Failed to load : "+ img.getName());
 			System.exit(-1);
-		}
-		int[] h2D = genHistoHueSat(image);
-		int[] h3D = genHistoRGB(image);
-		this.jdbcTemplate.update("INSERT INTO image (id, name, histogram2D, histogram3D) VALUES (?, ?, ?, ?)", id, name, h2D, h3D);
+        }
+		jdbcTemplate.update("INSERT INTO images (id, name, histogram2D, histogram3D) VALUES (?, ?, ?, ?)", img.getId(), img.getName(), h2D, h3D);
 	}
 
 	public void deleteImage(long id) {
-		this.jdbcTemplate.update("DELETE FROM image WHERE `id`=?", id);
+		this.jdbcTemplate.update("DELETE FROM images WHERE `id`=?", id);
 	}
 
 	public int getNbImages() {
@@ -45,8 +79,8 @@ public class SQLController implements InitializingBean{
 	private static int[] genHistoHueSat(Planar<GrayU8> input) {
 		double[] hsv = new double[3];
 		int[][] count = new int[36][10];
-		for(int i = 0; i < 360; i++) {
-			for(int j = 0; j < 100; j++) {
+		for(int i = 0; i < 36; i++) {
+			for(int j = 0; j < 10; j++) {
 				count[i][j] = 0;
 			}
 		}

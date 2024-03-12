@@ -1,5 +1,7 @@
 package pdl.backend;
 
+import pdl.backend.SQLController;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -38,7 +41,6 @@ public class ImageController {
   @Autowired
   public ImageController(ImageDao imageDao) {
     this.imageDao = imageDao;
-
     // check if the folder "images" exist
     File dirImage = new File("./images");
     if (!dirImage.exists() || !dirImage.isDirectory()) {
@@ -69,9 +71,7 @@ public class ImageController {
       Image newImg = new Image(files[i], byteArray);
       this.imageDao.create(newImg);
     }
-    for ( Image img : this.imageDao.retrieveAll() ) {
-      this.sqlController.addImage(img.getId(), img.getName());
-    }
+    this.sqlController = new SQLController(this.imageDao);
   }
 
   @RequestMapping(value = "/images/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
