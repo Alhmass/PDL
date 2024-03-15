@@ -1,13 +1,10 @@
 package pdl.backend;
 
-import pdl.backend.ImageDao;
-
 import org.springframework.jdbc.core.JdbcTemplate; 
 import org.springframework.stereotype.Repository;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 
 import javax.imageio.*;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import boofcv.alg.color.ColorHsv;
 import boofcv.io.image.ConvertBufferedImage;
-import boofcv.io.image.UtilImageIO;
 import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.Planar;
 
@@ -37,8 +33,7 @@ public class SQLController implements InitializingBean{
 		this.jdbcTemplate.execute("DROP TABLE IF EXISTS images");
 		this.jdbcTemplate.execute(
 		 		"CREATE TABLE IF NOT EXISTS images (id bigserial PRIMARY KEY, name char(255), histogram2D vector(360), histogram3D vector(1728))");
-		System.out.println("table creation\n");
-	
+
 		for (Image img : this.imageDao.retrieveAll()) {
 			addImage(img);
 		}
@@ -58,17 +53,15 @@ public class SQLController implements InitializingBean{
 				h3D = genHistoRGB(input);
 			}catch (Exception e){
 				System.out.println("Failed to generate histogram : " + img.getName());
-				System.exit(-1);
 			}
         } catch (Exception e) {
 			System.out.println("Failed to load : "+ img.getName());
-			System.exit(-1);
         }
 		jdbcTemplate.update("INSERT INTO images (id, name, histogram2D, histogram3D) VALUES (?, ?, ?, ?)", img.getId(), img.getName(), h2D, h3D);
 	}
 
 	public void deleteImage(long id) {
-		this.jdbcTemplate.update("DELETE FROM images WHERE `id`=?", id);
+		this.jdbcTemplate.update("DELETE FROM images WHERE id=?", id);
 	}
 
 	public int getNbImages() {

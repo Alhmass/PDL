@@ -1,22 +1,14 @@
 package pdl.backend;
 
-import pdl.backend.SQLController;
-
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,8 +40,8 @@ public class ImageController {
     }
 
     // Create the filter ".png" and ".jpg"
-    String[] extensions = { ".jpg", ".png" };
-    ImageFilter filter = new ImageFilter(extensions, 2);
+    String[] extensions = { ".jpg", ".png", ".jpeg" };
+    ImageFilter filter = new ImageFilter(extensions, 3);
 
     // Store all the file name who ended with ".png" or ".jpg"
     String[] files = dirImage.list(filter);
