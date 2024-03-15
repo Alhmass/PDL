@@ -1,19 +1,14 @@
 package pdl.backend;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +28,11 @@ public class ImageController {
   private ObjectMapper mapper;
 
   private final ImageDao imageDao;
+  private SQLController sqlController;
 
   @Autowired
   public ImageController(ImageDao imageDao) {
     this.imageDao = imageDao;
-
     // check if the folder "images" exist
     File dirImage = new File("./images");
     if (!dirImage.exists() || !dirImage.isDirectory()) {
@@ -68,6 +63,7 @@ public class ImageController {
       Image newImg = new Image(files[i], byteArray);
       this.imageDao.create(newImg);
     }
+    this.sqlController = new SQLController(this.imageDao);
   }
 
   @RequestMapping(value = "/images/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
