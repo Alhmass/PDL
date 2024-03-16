@@ -41,7 +41,7 @@ public class ImageController {
     }
 
     // Create the filter ".png", ".jpg" and ".jpeg"
-    String[] extensions = { ".jpg", ".png", ".jpeg"};
+    String[] extensions = { ".jpg", ".png", ".jpeg" };
     ImageFilter filter = new ImageFilter(extensions, 3);
 
     // Store all the file name who ended with ".png" or ".jpg"
@@ -91,6 +91,7 @@ public class ImageController {
       File toDelete = new File("./images/" + img.get().getName());
       if (toDelete.exists())
         toDelete.delete();
+      this.sqlController.deleteImage(img.get().getId());
       this.imageDao.delete(img.get());
       return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -103,6 +104,7 @@ public class ImageController {
         || file.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
       Image nimg = new Image(file.getOriginalFilename(), file.getBytes());
       this.imageDao.create(nimg);
+      this.sqlController.addImage(nimg);
       try {
         FileOutputStream nFile = new FileOutputStream("./images/" + file.getOriginalFilename());
         nFile.write(file.getBytes());
