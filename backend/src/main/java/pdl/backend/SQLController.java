@@ -69,14 +69,26 @@ public class SQLController implements InitializingBean {
 		return this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM images", Integer.class);
 	}
 
-	public long[] getSimilarImages2D(long id, int size){
+	public Image[] getSimilarImages2D(long id, int size){
 		String query = "SELECT id FROM images WHERE id != " + id + " ORDER BY histogram2D <-> (SELECT histogram2D FROM images WHERE id = " + id + ") LIMIT " + size;
-		return this.jdbcTemplate.queryForObject(query, long[].class);
+		long[] res = this.jdbcTemplate.queryForObject(query, long[].class);
+		Image[] img_list = new Image[res.length];
+		int count = 0;
+		for (long id_img : res) {
+			img_list[count] = imageDao.retrieve(id_img).get();
+		}
+		return img_list;
 	}
 
-	public long[] getSimilarImages3D(long id, int size){
+	public Image[] getSimilarImages3D(long id, int size){
 		String query = "SELECT id FROM images WHERE id != " + id + " ORDER BY histogram3D <-> (SELECT histogram3D FROM images WHERE id = " + id + ") LIMIT " + size;
-		return this.jdbcTemplate.queryForObject(query , long[].class);
+		long[] res = this.jdbcTemplate.queryForObject(query , long[].class);
+		Image[] img_list = new Image[res.length];
+		int count = 0;
+		for (long id_img : res) {
+			img_list[count] = imageDao.retrieve(id_img).get();
+		}
+		return img_list;
 	}
 
 	private static int[] genHistoHueSat(Planar<GrayU8> input) {

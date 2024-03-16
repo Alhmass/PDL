@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import jakarta.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -97,6 +100,43 @@ public class ImageController {
     }
   }
 
+  @RequestMapping(value = "/images/{id}/similar", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+  @ResponseBody
+  public ArrayNode similar(@PathVariable("id") long id, @PathParam("number") Optional<String> n, @PathParam("descriptor") Optional<String> histogram) {
+    /*if(this.imageDao.retrieve(id).isEmpty()) {
+      return mapper.createArrayNode();
+    }*/
+    int nb; String histo;
+    if(n.isPresent()) {
+      nb = Integer.parseInt(n.get());
+    } else {
+      nb = 5;
+    }
+    if(histogram.isPresent()) {
+      histo = histogram.get();
+    } else {
+      histo = "histogram2D";
+    }
+    Image[] res;
+    if(histo == "histogram2D") {
+      res = this.sqlController.getSimilarImages2D(id, nb);
+    } else if (histo == "histogram3D") {
+      res = this.sqlController.getSimilarImages3D(id, nb);
+    } else {
+      return mapper.createArrayNode();
+    }
+    ArrayNode nodes = mapper.createArrayNode();
+    for (Image item : res) {
+      ObjectNode node = mapper.createObjectNode();
+      node.put("id", item.getId());
+      node.put("name", item.getName());
+      nodes.add(node);
+    }
+    return nodes;
+  }
+    
+
+
   @RequestMapping(value = "/images", method = RequestMethod.POST)
   public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file,
       RedirectAttributes redirectAttributes) throws IOException {
@@ -130,6 +170,5 @@ public class ImageController {
       nodes.add(node);
     }
     return nodes;
-  }
-
+  }  
 }
