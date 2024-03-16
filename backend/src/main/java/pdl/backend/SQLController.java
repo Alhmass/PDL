@@ -35,7 +35,7 @@ public class SQLController implements InitializingBean {
 
 		for (Image img : this.imageDao.retrieveAll()) {
 			addImage(img);
-		}
+		}			
 	}
 
 	public void addImage(Image img) {
@@ -67,6 +67,16 @@ public class SQLController implements InitializingBean {
 
 	public int getNbImages() {
 		return this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM images", Integer.class);
+	}
+
+	public long[] getSimilarImages2D(long id, int size){
+		String query = "SELECT id FROM images WHERE id != " + id + " ORDER BY histogram2D <-> (SELECT histogram2D FROM images WHERE id = " + id + ") LIMIT " + size;
+		return this.jdbcTemplate.queryForObject(query, long[].class);
+	}
+
+	public long[] getSimilarImages3D(long id, int size){
+		String query = "SELECT id FROM images WHERE id != " + id + " ORDER BY histogram3D <-> (SELECT histogram3D FROM images WHERE id = " + id + ") LIMIT " + size;
+		return this.jdbcTemplate.queryForObject(query , long[].class);
 	}
 
 	private static int[] genHistoHueSat(Planar<GrayU8> input) {

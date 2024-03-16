@@ -82,8 +82,8 @@ public class ImageController {
 
   @RequestMapping(value = "/images/{id}", method = RequestMethod.DELETE)
   public ResponseEntity<?> deleteImage(@PathVariable("id") long id) {
-    if (id == 0)
-      return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+    /*if (id == 0)
+      return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);*/
     var img = this.imageDao.retrieve(id);
     if (img.isEmpty())
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
