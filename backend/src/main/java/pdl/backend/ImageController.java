@@ -32,6 +32,8 @@ public class ImageController {
   private ObjectMapper mapper;
 
   private final ImageDao imageDao;
+
+  @Autowired
   private SQLController sqlController;
 
   @Autowired
