@@ -111,12 +111,9 @@ public class ImageController {
   @RequestMapping(value = "/images/{id}/similar", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
   @ResponseBody
   public ArrayNode similar(@PathVariable("id") long id, @PathParam("number") Optional<String> n, @PathParam("descriptor") Optional<String> histogram) {
-<<<<<<< HEAD
-=======
     if(this.imageDao.retrieve(id).isEmpty()) {
       return mapper.createArrayNode();
     }
->>>>>>> 8b55f636440cd3fe0b569a758e73f9d5576728ac
     int nb; String histo;
     if(n.isPresent()) {
       nb = Integer.parseInt(n.get());
@@ -141,16 +138,11 @@ public class ImageController {
     ArrayNode nodes = mapper.createArrayNode();
     for (int img = 0; img < res_img.length; img++) {
       ObjectNode node = mapper.createObjectNode();
-<<<<<<< HEAD
-      node.put("id", item.getId());
-      node.put("name", item.getName());
-      node.put("MediaType", item.getMediaType(item.getName()));
-      node.put("size", item.getSize(item.getName()));
-=======
       node.put("id", res_img[img].getId());
       node.put("name", res_img[img].getName());
       node.put("similar score", res_dist[img]);
->>>>>>> 8b55f636440cd3fe0b569a758e73f9d5576728ac
+      node.put("MediaType", res_img[img].getMediaType(res_img[img].getName()));
+      node.put("size", res_img[img].getSize(res_img[img].getName()));
       nodes.add(node);
     }
     return nodes;
