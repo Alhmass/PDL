@@ -1,31 +1,23 @@
+import axios, { AxiosResponse, AxiosError } from 'axios';
+import { ImageType } from '@/image';
 
-import axios from 'axios'
+const instance = axios.create({
+  baseURL: "/",
+  timeout: 15000,
+});
 
-export const getImages = async () => {
-    try {
-        const response = await axios.get('images')
-        return response.data
-    } catch (error) {
-        console.error(error);
-    }
-}
+const responseBody = (response: AxiosResponse) => response.data;
 
-export const getImage = async (url: string) => {
-    try {
-        const response = await axios.get(url, { responseType: "blob" })
-        return response.data
-    }
-    catch (error) {
-        console.error(error)
-    }
-}
+const requests = {
+  get: (url: string, param: {}) => instance.get(url, param).then(responseBody),
+  post: (url: string, body: {}) => instance.post(url, body, { headers: { "Content-Type": "multipart/form-data" }, }).then(responseBody),
+  put: (url: string, body: {}) => instance.put(url, body).then(responseBody),
+  delete: (url: string) => instance.delete(url).then(responseBody)
+};
 
-export const putImage = async (file: string) => {
-    try {
-        let formdata = new FormData()
-        formdata.append('file', file)
-        await axios.post('/images', formdata, { headers: { 'Content-Type': 'multipart/form-data' } })
-    } catch (error) {
-        console.error(error)
-    }
-}
+export const api = {
+  getImageList: (): Promise<ImageType[]> => requests.get('images', {}),
+  getImage: (id: number): Promise<Blob> => requests.get(`images/${id}`, { responseType: "blob" }),
+  createImage: (form: FormData): Promise<ImageType> => requests.post('images', form),
+  deleteImage: (id: number): Promise<void> => requests.delete(`images/${id}`),
+};

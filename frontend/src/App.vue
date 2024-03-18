@@ -1,41 +1,59 @@
 <script setup lang="ts">
-import Gallery from './components/Gallery.vue';
-import HelloWorld from './components/HelloWorld.vue'
-import { getImages } from './http-api';
-import { ref } from 'vue';
-const imageList = ref<Array<any>>([])
-const get_images = async () => {
-  imageList.value = await getImages();
-};
-get_images()
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="../public/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <nav>
+      <ul>
+        <li>
+          <router-link to="/">Home</router-link>
+        </li>
+        <li>
+          <router-link to="/gallery">Gallery</router-link>
+        </li>
+        <li>
+          <router-link to="/upload">Upload</router-link>
+        </li>
+        <li>
+          <router-link to="/download">Download</router-link>
+        </li>
+      </ul>
+    </nav>
+
+    <div>
+      <h1>PDL - L3</h1>
+      <router-view />
+    </div>
   </div>
-  <HelloWorld msg="Galerie d'image" :images="imageList" />
-  <Gallery @imageUpdated="(_msg: any) => get_images()" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+#app {
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #2c3e50;
 }
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
 }
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+li {
+  float: left;
+}
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+.error {
+  color: red;
+  font-weight: bold;
+  list-style-type: none;
+  margin-top: 1em;
 }
 </style>
