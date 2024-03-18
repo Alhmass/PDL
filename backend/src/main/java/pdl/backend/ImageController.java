@@ -28,6 +28,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RestController
 public class ImageController {
 
+  private static final MediaType ImgType = null;
+
   @Autowired
   private ObjectMapper mapper;
 
@@ -75,20 +77,23 @@ public class ImageController {
   @RequestMapping(value = "/images/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
   public ResponseEntity<?> getImage(@PathVariable("id") long id) {
     var img = this.imageDao.retrieve(id);
+    if (img.get().getName().endsWith(".png")){
+      MediaType ImgType = MediaType.IMAGE_PNG;
+    }else{
+      MediaType ImgType = MediaType.IMAGE_JPEG;
+    }
     if (img.isEmpty())
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     else {
       return ResponseEntity
           .ok()
-          .contentType(MediaType.IMAGE_JPEG)
+          .contentType(ImgType)
           .body(img.get().getData());
     }
   }
 
   @RequestMapping(value = "/images/{id}", method = RequestMethod.DELETE)
   public ResponseEntity<?> deleteImage(@PathVariable("id") long id) {
-    /*if (id == 0)
-      return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);*/
     var img = this.imageDao.retrieve(id);
     if (img.isEmpty())
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -105,9 +110,6 @@ public class ImageController {
   @RequestMapping(value = "/images/{id}/similar", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
   @ResponseBody
   public ArrayNode similar(@PathVariable("id") long id, @PathParam("number") Optional<String> n, @PathParam("descriptor") Optional<String> histogram) {
-    /*if(this.imageDao.retrieve(id).isEmpty()) {
-      return mapper.createArrayNode();
-    }*/
     int nb; String histo;
     if(n.isPresent()) {
       nb = Integer.parseInt(n.get());
@@ -132,6 +134,8 @@ public class ImageController {
       ObjectNode node = mapper.createObjectNode();
       node.put("id", item.getId());
       node.put("name", item.getName());
+      node.put("MediaType", item.getMediaType(item.getName()));
+      node.put("size", item.getSize(item.getName()));
       nodes.add(node);
     }
     return nodes;
@@ -169,6 +173,8 @@ public class ImageController {
       ObjectNode node = mapper.createObjectNode();
       node.put("name", item.getName());
       node.put("id", item.getId());
+      node.put("MediaType", item.getMediaType(item.getName()));
+      node.put("size", item.getSize(item.getName()));
       nodes.add(node);
     }
     return nodes;
