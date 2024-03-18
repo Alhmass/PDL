@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -105,9 +106,9 @@ public class ImageController {
   @RequestMapping(value = "/images/{id}/similar", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
   @ResponseBody
   public ArrayNode similar(@PathVariable("id") long id, @PathParam("number") Optional<String> n, @PathParam("descriptor") Optional<String> histogram) {
-    /*if(this.imageDao.retrieve(id).isEmpty()) {
+    if(this.imageDao.retrieve(id).isEmpty()) {
       return mapper.createArrayNode();
-    }*/
+    }
     int nb; String histo;
     if(n.isPresent()) {
       nb = Integer.parseInt(n.get());
@@ -119,7 +120,7 @@ public class ImageController {
     } else {
       histo = "histogram2D";
     }
-    Image[] res;
+    List<Object> res;
     if(histo == "histogram2D") {
       res = this.sqlController.getSimilarImages2D(id, nb);
     } else if (histo == "histogram3D") {
@@ -127,11 +128,14 @@ public class ImageController {
     } else {
       return mapper.createArrayNode();
     }
+    Image[] res_img = (Image[]) res.get(0);
+    double[] res_dist = (double[]) res.get(1);
     ArrayNode nodes = mapper.createArrayNode();
-    for (Image item : res) {
+    for (int img = 0; img < res_img.length; img++) {
       ObjectNode node = mapper.createObjectNode();
-      node.put("id", item.getId());
-      node.put("name", item.getName());
+      node.put("id", res_img[img].getId());
+      node.put("name", res_img[img].getName());
+      node.put("similar score", res_dist[img]);
       nodes.add(node);
     }
     return nodes;

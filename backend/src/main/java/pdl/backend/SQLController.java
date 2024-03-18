@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.*;
 
@@ -69,26 +72,32 @@ public class SQLController implements InitializingBean {
 		return this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM images", Integer.class);
 	}
 
-	public Image[] getSimilarImages2D(long id, int size){
-		String query = "SELECT id FROM images WHERE id != " + id + " ORDER BY histogram2D <-> (SELECT histogram2D FROM images WHERE id = " + id + ") LIMIT " + size;
-		long[] res = this.jdbcTemplate.queryForObject(query, long[].class);
-		Image[] img_list = new Image[res.length];
+	public List<Object> getSimilarImages2D(long id, int size){
+		String query = "SELECT id, histogram2D <-> (SELECT histogram2D FROM images WHERE id = " + id + ") AS distance FROM images WHERE id != " + id + " ORDER BY distance LIMIT " + size;
+		List<Map<String, Object>> res = this.jdbcTemplate.queryForList(query);
+		Image[] img_list = new Image[res.size()];
+		double[] dist_list = new double[res.size()];
 		int count = 0;
-		for (long id_img : res) {
-			img_list[count] = imageDao.retrieve(id_img).get();
+		for(Map<String, Object> row : res) {
+			img_list[count] = imageDao.retrieve((long)row.get("id")).get();
+			dist_list[count] = (double)row.get("distance");
+			count++;
 		}
-		return img_list;
+		return Arrays.asList(img_list, dist_list);
 	}
 
-	public Image[] getSimilarImages3D(long id, int size){
-		String query = "SELECT id FROM images WHERE id != " + id + " ORDER BY histogram3D <-> (SELECT histogram3D FROM images WHERE id = " + id + ") LIMIT " + size;
-		long[] res = this.jdbcTemplate.queryForObject(query , long[].class);
-		Image[] img_list = new Image[res.length];
+	public List<Object> getSimilarImages3D(long id, int size){
+		String query = "SELECT id, histogram3D <-> (SELECT histogram3D FROM images WHERE id = " + id + ") AS distance FROM images WHERE id != " + id + " ORDER BY distance LIMIT " + size;
+		List<Map<String, Object>> res = this.jdbcTemplate.queryForList(query);
+		Image[] img_list = new Image[res.size()];
+		double[] dist_list = new double[res.size()];
 		int count = 0;
-		for (long id_img : res) {
-			img_list[count] = imageDao.retrieve(id_img).get();
+		for (Map<String, Object> row : res) {
+			img_list[count] = imageDao.retrieve((long)row.get("id")).get();
+			dist_list[count] = (double)row.get("distance");
+			count++;
 		}
-		return img_list;
+		return Arrays.asList(img_list, dist_list);
 	}
 
 	private static int[] genHistoHueSat(Planar<GrayU8> input) {
