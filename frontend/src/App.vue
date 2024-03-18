@@ -14,9 +14,6 @@
         <li>
           <router-link to="/upload">Upload</router-link>
         </li>
-        <li>
-          <router-link to="/download">Download</router-link>
-        </li>
       </ul>
     </nav>
 

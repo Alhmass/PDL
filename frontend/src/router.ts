@@ -25,12 +25,6 @@ const routes: Array<RouteRecordRaw> = [
     name: "upload",
     component: () => import("./components/Upload.vue"),
     props: true
-  },
-  {
-    path: "/download",
-    name: "download",
-    component: () => import("./components/Download.vue"),
-    props: true
   }
 ];
 
