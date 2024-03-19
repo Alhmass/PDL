@@ -15,7 +15,7 @@ interface SelectedDescr {
 }
 const descriptor = ref<SelectedDescr>({ name: '' });
 function showSimilar() {
-	let nbImages = parseInt((document.getElementById("idImages") as HTMLInputElement).value);
+	let nbImages = parseInt((document.getElementById("nbImages") as HTMLInputElement).value);
 	api.getImageListSimilar(props.id, descriptor.value.name, nbImages)
 	.then((data) => {
 		imageList.value = data;
