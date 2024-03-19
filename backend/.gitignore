@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### ressources public ###
+src/main/resources/public/
+src/main/resources/static/

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -119,5 +120,18 @@ public class ImageControllerTests {
 			fail("Erreur: Le dossier image devrait exister");
 		}
 		return true;
+	}
+
+	@Test
+	@Order(11)
+	public void checkJsonFormat() throws Exception {
+		String result = this.mockMvc.perform(get("/images")).andReturn().getResponse().getContentAsString();
+		String[] images = result.split("},");
+		for (int i = 0; i < images.length; i++) {
+			String[] image = images[i].split(",");
+			if (!image[0].contains("\"id\":\"") || !image[1].contains("\"name\":\"") || !image[2].contains("\"MediaType\":\"") || !image[3].contains("\"size\":\"")) {
+				fail("Erreur: Le format du json n'est pas correct");
+			}
+		}
 	}
 }
