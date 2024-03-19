@@ -118,7 +118,7 @@ public class ImageController {
     if(n.isPresent()) {
       nb = Integer.parseInt(n.get());
     } else {
-      nb = 5;
+      nb = 1;
     }
     if(histogram.isPresent()) {
       histo = histogram.get();
