@@ -70,18 +70,20 @@ function gotoImage() {
   <div>
     <h3>Choose an image</h3>
     <select v-model="selected" @change="loadImage()">
-    <option disabled value="">Selectionner une image</option>
-    <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}</option>
-  </select>
-  <button v-if="selected" @click="downloadImage()">Télécharger</button>
-  <button v-else disabled>Télécharger</button>
-   <button v-if="selected" @click="deleteImage()">Supprimer</button>
-  <button v-else disabled>Supprimer</button>
-  <a v-if="selected" href="#" @click="gotoImage()">
-    <img class="preview" src="">
-  </a>
+      <option disabled value="">Selectionner une image</option>
+      <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}</option>
+    </select>
+    <button v-if="selected" @click="downloadImage()">Télécharger</button>
+    <button v-else disabled>Télécharger</button>
+    <button v-if="selected" @click="deleteImage()">Supprimer</button>
+    <button v-else disabled>Supprimer</button>
+    <hr />
+    <img v-if="selected" class="preview" src="" @click="gotoImage()">
   </div>
 </template>
 
 <style scoped>
+img {
+  cursor: pointer;
+}
 </style>

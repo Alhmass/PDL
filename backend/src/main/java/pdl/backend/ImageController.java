@@ -110,25 +110,15 @@ public class ImageController {
 
   @RequestMapping(value = "/images/{id}/similar", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
   @ResponseBody
-  public ArrayNode similar(@PathVariable("id") long id, @PathParam("number") Optional<String> n, @PathParam("descriptor") Optional<String> histogram) {
+  public ArrayNode similar(@PathVariable("id") long id, @RequestParam("number") String n, @RequestParam("descriptor") String histogram) {
     if(this.imageDao.retrieve(id).isEmpty()) {
       return mapper.createArrayNode();
     }
-    int nb; String histo;
-    if(n.isPresent()) {
-      nb = Integer.parseInt(n.get());
-    } else {
-      nb = 5;
-    }
-    if(histogram.isPresent()) {
-      histo = histogram.get();
-    } else {
-      histo = "histogram2D";
-    }
+    int nb = Integer.parseInt(n);
     List<Object> res;
-    if(histo == "histogram2D") {
+    if(histogram.equals("histogram2D")) {
       res = this.sqlController.getSimilarImages2D(id, nb);
-    } else if (histo == "histogram3D") {
+    } else if (histogram.equals("histogram3D")) {
       res = this.sqlController.getSimilarImages3D(id, nb);
     } else {
       return mapper.createArrayNode();
