@@ -43,10 +43,6 @@ api.getImage(props.id)
   .catch(e => {
     console.log(e.message);
   });
-
-function gotoImage(imageID:number) {
-  router.push({ name: 'image', params: { id: imageID } })
-}
 </script>
 
 <template>
@@ -63,12 +59,21 @@ function gotoImage(imageID:number) {
     <button v-else disabled>Afficher</button>
 	<hr />
 	<div v-if="descriptor" class="image_container">
-      <Image v-for="image in imageList" :id="image.id" class="vignette" @click="gotoImage(image.id)"/>
+      <Image v-for="image in imageList" :id="image.id" />
     </div>
 </template>
 
-<style>
-	.vignette {
-		cursor: pointer;
-	}
+<style scoped>
+  .image_container{
+    display: flex;
+    max-width: 100%;
+    justify-content: center;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    padding: 0 1em;
+  }
+  .image_container:deep(figure img){
+    width: 250px;
+    height: 250px;
+  }
 </style>

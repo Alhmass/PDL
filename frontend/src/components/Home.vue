@@ -78,11 +78,12 @@ function gotoImage() {
     <button v-if="selected" @click="deleteImage()">Supprimer</button>
     <button v-else disabled>Supprimer</button>
     <hr />
-    <a v-if="selected" href="#">
-      <img class="preview" src="" @click="gotoImage()">
-    </a>
+    <img v-if="selected" class="preview" src="" @click="gotoImage()">
   </div>
 </template>
 
 <style scoped>
+img {
+  cursor: pointer;
+}
 </style>

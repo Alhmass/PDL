@@ -24,19 +24,23 @@ function gotoImage(imageID:number) {
   <div>
     <h3>Gallery</h3>
     <div v-if="imageList" class="image_container">
-      <Image v-for="image in imageList" :id="image.id" class="vignette" @click="gotoImage(image.id)"/>
+      <Image v-for="image in imageList" :id="image.id" @click="gotoImage(image.id)"/>
     </div>
   </div>
 </template>
 
 <style scoped>
-  .vignette{
-    cursor: pointer;
+.image_container{
+    display: flex;
+    max-width: 100%;
+    justify-content: center;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    padding: 0 1em;
+  }
+.image_container:deep(figure img){
     width: 250px;
     height: 250px;
-    margin: 0 auto;
-  }
-  .image_container{
-    display: flex;
+    cursor: pointer;
   }
 </style>
