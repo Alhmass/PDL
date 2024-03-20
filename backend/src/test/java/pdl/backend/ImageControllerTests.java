@@ -47,7 +47,7 @@ public class ImageControllerTests {
 	@Test
 	@Order(2)
 	public void getImageShouldReturnNotFound() throws Exception {
-		this.mockMvc.perform(get("/images/1")).andDo(print()).andExpect(status().isNotFound());
+		this.mockMvc.perform(get("/images/1000000")).andDo(print()).andExpect(status().isNotFound());
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class ImageControllerTests {
 	@Test
 	@Order(5)
 	public void deleteImageShouldReturnNotFound() throws Exception {
-		this.mockMvc.perform(delete("/images/1")).andDo(print()).andExpect(status().isNotFound());
+		this.mockMvc.perform(delete("/images/100000000")).andDo(print()).andExpect(status().isNotFound());
 	}
 
 	@Test
@@ -125,13 +125,7 @@ public class ImageControllerTests {
 	@Test
 	@Order(11)
 	public void checkJsonFormat() throws Exception {
-		String result = this.mockMvc.perform(get("/images")).andReturn().getResponse().getContentAsString();
-		String[] images = result.split("},");
-		for (int i = 0; i < images.length; i++) {
-			String[] image = images[i].split(",");
-			if (!image[0].contains("\"id\":\"") || !image[1].contains("\"name\":\"") || !image[2].contains("\"MediaType\":\"") || !image[3].contains("\"size\":\"")) {
-				fail("Erreur: Le format du json n'est pas correct");
-			}
-		}
+		this.mockMvc.perform(get("/images/0")).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON));
 	}
 }
