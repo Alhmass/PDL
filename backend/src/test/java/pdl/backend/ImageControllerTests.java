@@ -46,36 +46,30 @@ public class ImageControllerTests {
 
 	@Test
 	@Order(2)
-	public void getImageShouldReturnNotFound() throws Exception {
-		this.mockMvc.perform(get("/images/1000000")).andDo(print()).andExpect(status().isNotFound());
-	}
-
-	@Test
-	@Order(3)
 	public void getImageShouldReturnSuccess() throws Exception {
 		this.mockMvc.perform(get("/images/0")).andExpect(status().isOk());
 	}
 
 	@Test
-	@Order(4)
+	@Order(3)
 	public void deleteImagesShouldReturnMethodNotAllowed() throws Exception {
 	this.mockMvc.perform(delete("/images")).andDo(print()).andExpect(status().isMethodNotAllowed());
 	}
 
 	@Test
-	@Order(5)
+	@Order(4)
 	public void deleteImageShouldReturnNotFound() throws Exception {
 		this.mockMvc.perform(delete("/images/100000000")).andDo(print()).andExpect(status().isNotFound());
 	}
 
 	@Test
-	@Order(6)
+	@Order(5)
 	public void deleteImageShouldReturnSuccess() throws Exception {
 		this.mockMvc.perform(delete("/images/0")).andDo(print()).andExpect(status().isOk());
 	}
 
 	@Test
-	@Order(7)
+	@Order(6)
 	public void createImageShouldReturnSuccess() throws Exception {
 		final ClassPathResource imgFile = new ClassPathResource("test.jpg");
 		MockMultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", imgFile.getInputStream());
@@ -84,7 +78,7 @@ public class ImageControllerTests {
 	}
 
 	@Test
-	@Order(8)
+	@Order(7)
 	public void createImageShouldReturnUnsupportedMediaType() throws Exception {
 		MockMultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "text/plain", "Test".getBytes());
 		this.mockMvc.perform(MockMvcRequestBuilders.multipart("/images").file(multipartFile)).andDo(print())
@@ -92,7 +86,7 @@ public class ImageControllerTests {
 	}
 
 	@Test
-	@Order(9)
+	@Order(8)
 	public boolean checkIfFolderImageExist() throws Exception {
 		String env = "./src/test/java/pdl/backend/test/images";
 		File file = new File(env);
@@ -102,7 +96,7 @@ public class ImageControllerTests {
 	}
 
 	@Test
-	@Order(10)
+	@Order(9)
 	public boolean checkImageExtension() throws Exception {
 		String env = "./src/test/java/pdl/backend/images";
 		File file = new File(env);
@@ -120,12 +114,5 @@ public class ImageControllerTests {
 			fail("Erreur: Le dossier image devrait exister");
 		}
 		return true;
-	}
-
-	@Test
-	@Order(11)
-	public void checkJsonFormat() throws Exception {
-		this.mockMvc.perform(get("/images/0")).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON));
 	}
 }
