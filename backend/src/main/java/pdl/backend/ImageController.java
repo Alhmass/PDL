@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -15,6 +16,7 @@ import jakarta.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,9 +80,9 @@ public class ImageController {
   @RequestMapping(value = "/images/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
   public ResponseEntity<?> getImage(@PathVariable("id") long id) {
     var img = this.imageDao.retrieve(id);
-    if (img.get().getName().endsWith(".png")){
+    if (img.get().getName().endsWith(".png")) {
       MediaType ImgType = MediaType.IMAGE_PNG;
-    }else{
+    } else {
       MediaType ImgType = MediaType.IMAGE_JPEG;
     }
     if (img.isEmpty())
@@ -110,18 +112,23 @@ public class ImageController {
 
   @RequestMapping(value = "/images/{id}/similar", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
   @ResponseBody
-  public ArrayNode similar(@PathVariable("id") long id, @RequestParam("number") String n, @RequestParam("descriptor") String histogram) {
-    if(this.imageDao.retrieve(id).isEmpty()) {
-      return mapper.createArrayNode();
+  public ResponseEntity<?> similar(@PathVariable("id") long id, @RequestParam("number") String n,
+      @RequestParam("descriptor") String histogram) {
+    if (this.imageDao.retrieve(id).isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    String containsOnlyNB = "\\d+";
+    if (!Pattern.matches(containsOnlyNB, n)) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     int nb = Integer.parseInt(n);
     List<Object> res;
-    if(histogram.equals("histogram2D")) {
+    if (histogram.equals("histogram2D")) {
       res = this.sqlController.getSimilarImages2D(id, nb);
     } else if (histogram.equals("histogram3D")) {
       res = this.sqlController.getSimilarImages3D(id, nb);
     } else {
-      return mapper.createArrayNode();
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     Image[] res_img = (Image[]) res.get(0);
     double[] res_dist = (double[]) res.get(1);
@@ -135,10 +142,10 @@ public class ImageController {
       node.put("size", res_img[img].getSize(res_img[img].getName()));
       nodes.add(node);
     }
-    return nodes;
+    return ResponseEntity
+        .ok()
+        .body(nodes);
   }
-    
-
 
   @RequestMapping(value = "/images", method = RequestMethod.POST)
   public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file,
@@ -175,5 +182,5 @@ public class ImageController {
       nodes.add(node);
     }
     return nodes;
-  }  
+  }
 }
