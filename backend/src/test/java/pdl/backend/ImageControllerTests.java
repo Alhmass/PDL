@@ -52,24 +52,30 @@ public class ImageControllerTests {
 
 	@Test
 	@Order(3)
+	public void getImageShouldReturnNotFound() throws Exception {
+		this.mockMvc.perform(get("/images/1000000")).andDo(print()).andExpect(status().isNotFound());
+	}
+
+	@Test
+	@Order(4)
 	public void deleteImagesShouldReturnMethodNotAllowed() throws Exception {
 	this.mockMvc.perform(delete("/images")).andDo(print()).andExpect(status().isMethodNotAllowed());
 	}
 
 	@Test
-	@Order(4)
+	@Order(5)
 	public void deleteImageShouldReturnNotFound() throws Exception {
 		this.mockMvc.perform(delete("/images/100000000")).andDo(print()).andExpect(status().isNotFound());
 	}
 
 	@Test
-	@Order(5)
+	@Order(6)
 	public void deleteImageShouldReturnSuccess() throws Exception {
 		this.mockMvc.perform(delete("/images/0")).andDo(print()).andExpect(status().isOk());
 	}
 
 	@Test
-	@Order(6)
+	@Order(7)
 	public void createImageShouldReturnSuccess() throws Exception {
 		final ClassPathResource imgFile = new ClassPathResource("test.jpg");
 		MockMultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", imgFile.getInputStream());
@@ -78,7 +84,7 @@ public class ImageControllerTests {
 	}
 
 	@Test
-	@Order(7)
+	@Order(8)
 	public void createImageShouldReturnUnsupportedMediaType() throws Exception {
 		MockMultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "text/plain", "Test".getBytes());
 		this.mockMvc.perform(MockMvcRequestBuilders.multipart("/images").file(multipartFile)).andDo(print())
@@ -86,7 +92,7 @@ public class ImageControllerTests {
 	}
 
 	@Test
-	@Order(8)
+	@Order(9)
 	public boolean checkIfFolderImageExist() throws Exception {
 		String env = "./src/test/java/pdl/backend/test/images";
 		File file = new File(env);
@@ -96,7 +102,7 @@ public class ImageControllerTests {
 	}
 
 	@Test
-	@Order(9)
+	@Order(10)
 	public boolean checkImageExtension() throws Exception {
 		String env = "./src/test/java/pdl/backend/images";
 		File file = new File(env);

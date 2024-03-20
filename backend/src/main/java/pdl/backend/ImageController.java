@@ -80,19 +80,17 @@ public class ImageController {
   @RequestMapping(value = "/images/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
   public ResponseEntity<?> getImage(@PathVariable("id") long id) {
     var img = this.imageDao.retrieve(id);
+    if (img.isEmpty())
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     if (img.get().getName().endsWith(".png")) {
       MediaType ImgType = MediaType.IMAGE_PNG;
     } else {
       MediaType ImgType = MediaType.IMAGE_JPEG;
     }
-    if (img.isEmpty())
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    else {
-      return ResponseEntity
-          .ok()
-          .contentType(ImgType)
-          .body(img.get().getData());
-    }
+    return ResponseEntity
+        .ok()
+        .contentType(ImgType)
+        .body(img.get().getData());
   }
 
   @RequestMapping(value = "/images/{id}", method = RequestMethod.DELETE)
