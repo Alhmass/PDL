@@ -137,7 +137,7 @@ public class ImageController {
       ObjectNode node = mapper.createObjectNode();
       node.put("id", res_img[img].getId());
       node.put("name", res_img[img].getName());
-      node.put("similar score", res_dist[img]);
+      node.put("similar_score", res_dist[img]);
       node.put("MediaType", res_img[img].getMediaType(res_img[img].getName()));
       node.put("size", res_img[img].getSize(res_img[img].getName()));
       nodes.add(node);
