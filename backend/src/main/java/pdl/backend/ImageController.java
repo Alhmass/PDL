@@ -100,8 +100,11 @@ public class ImageController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     else {
       File toDelete = new File("./images/" + img.get().getName());
+      File toDeleteTag = new File("./images/tag/" + img.get().getName()+".txt");
       if (toDelete.exists())
         toDelete.delete();
+      if (toDeleteTag.exists())
+        toDeleteTag.delete();
       this.sqlController.deleteImage(img.get().getId());
       this.imageDao.delete(img.get());
       return new ResponseEntity<>(HttpStatus.OK);
