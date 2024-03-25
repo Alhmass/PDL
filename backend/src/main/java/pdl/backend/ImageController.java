@@ -114,7 +114,7 @@ public class ImageController {
   @RequestMapping(value = "/images/{id}/similar", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
   @ResponseBody
   public ResponseEntity<?> similar(@PathVariable("id") long id, @RequestParam("number") String n,
-      @RequestParam("descriptor") String histogram) {
+      @RequestParam("descriptor") String descr, @RequestParam("tags") Optional<String> tag) {
     if (this.imageDao.retrieve(id).isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -124,10 +124,16 @@ public class ImageController {
     }
     int nb = Integer.parseInt(n);
     List<Object> res;
-    if (histogram.equals("histogram2D")) {
+    if (descr.equals("histogram2D")) {
       res = this.sqlController.getSimilarImages2D(id, nb);
-    } else if (histogram.equals("histogram3D")) {
+    } else if (descr.equals("histogram3D")) {
       res = this.sqlController.getSimilarImages3D(id, nb);
+    } else if(descr.equals("tags")) {
+      if(tag.isPresent()) {
+        res = this.sqlController.getSimilarTags(id, tag.get(), nb);
+      } else {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      }
     } else {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -155,7 +161,7 @@ public class ImageController {
         || file.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
       Image nimg = new Image(file.getOriginalFilename(), file.getBytes());
       this.imageDao.create(nimg);
-      this.sqlController.addImage(nimg);
+      this.sqlController.addImage(nimg, "");
       try {
         FileOutputStream nFile = new FileOutputStream("./images/" + file.getOriginalFilename());
         nFile.write(file.getBytes());
@@ -183,5 +189,23 @@ public class ImageController {
       nodes.add(node);
     }
     return nodes;
+  }
+
+  @RequestMapping(value = "/images/search", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+  @ResponseBody
+  public ResponseEntity<?> searchTags(@RequestParam("tags") String tag) {
+    List<Image> res = this.sqlController.searchTags(tag);
+    ArrayNode nodes = mapper.createArrayNode();
+    for (Image img : res) {
+      ObjectNode node = mapper.createObjectNode();
+      node.put("id", img.getId());
+      node.put("name", img.getName());
+      node.put("MediaType", img.getMediaType(img.getName()));
+      node.put("size", img.getSize(img.getName()));
+      nodes.add(node);
+    }
+    return ResponseEntity
+        .ok()
+        .body(nodes);
   }
 }

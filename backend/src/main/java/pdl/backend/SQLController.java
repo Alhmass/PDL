@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.FileReader;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +36,14 @@ public class SQLController implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		this.jdbcTemplate.execute("DROP TABLE IF EXISTS images");
 		this.jdbcTemplate.execute(
-				"CREATE TABLE IF NOT EXISTS images (id bigserial PRIMARY KEY, name char(255), histogram2D vector(360), histogram3D vector(1728))");
+				"CREATE TABLE IF NOT EXISTS images (id bigserial PRIMARY KEY, name char(255), histogram2D vector(360), histogram3D vector(1728), tags varchar(10000))");
 
 		for (Image img : this.imageDao.retrieveAll()) {
-			addImage(img);
+			addImage(img, "");
 		}			
 	}
 
-	public void addImage(Image img) {
+	public void addImage(Image img, String tags) {
 		Planar<GrayU8> input = null;
 		int[] h2D = new int[360];
 		int[] h3D = new int[1728];
@@ -56,12 +58,24 @@ public class SQLController implements InitializingBean {
 			} catch (Exception e) {
 				System.out.println("Failed to generate histogram : " + img.getName());
 			}
+			if(tags.equals("")) {
+				try {
+					FileReader file_tag = new FileReader("./images/tag/" + img.getName() + ".txt");
+					int c;
+					while((c = file_tag.read()) != -1) {
+						tags += (char)c;
+					}
+					file_tag.close();
+				} catch (Exception e) {
+					System.out.println("Tags not found for : " + img.getName());
+				}
+			}
 		} catch (Exception e) {
 			System.out.println("Failed to load : " + img.getName());
 		}
-		this.jdbcTemplate.update("INSERT INTO images (id, name, histogram2D, histogram3D) VALUES (?, ?, ?, ?)",
+		this.jdbcTemplate.update("INSERT INTO images (id, name, histogram2D, histogram3D, tags) VALUES (?, ?, ?, ?, ?)",
 				img.getId(),
-				img.getName(), h2D, h3D);
+				img.getName(), h2D, h3D, tags);
 	}
 
 	public void deleteImage(long id) {
@@ -70,6 +84,36 @@ public class SQLController implements InitializingBean {
 
 	public int getNbImages() {
 		return this.jdbcTemplate.queryForObject("SELECT COUNT(*) FROM images", Integer.class);
+	}
+
+	public String[] getTags(long id) {
+		String request = "SELECT tags FROM images WHERE id=" + id;
+		String tag = this.jdbcTemplate.queryForObject(request, String.class);
+		return tag.split("@");
+	}
+
+	public List<Image> searchTags(String tag) {
+		String request = "SELECT id FROM images WHERE tags LIKE '%" + tag + "%'";
+		List<Map<String, Object>> res = this.jdbcTemplate.queryForList(request);
+		List<Image> img_list = new ArrayList<Image>();
+		for(Map<String, Object> row : res) {
+			img_list.add(imageDao.retrieve((long)row.get("id")).get());
+		}
+		return img_list;
+	}
+
+	public List<Object> getSimilarTags(long id, String tag, int size) {
+		String query = "SELECT id FROM images WHERE id != " + id + " AND tags LIKE '%" + tag + "%' LIMIT " + size;
+		List<Map<String, Object>> res = this.jdbcTemplate.queryForList(query);
+		Image[] img_list = new Image[res.size()];
+		double[] dist_list = new double[res.size()];
+		int count = 0;
+		for(Map<String, Object> row : res) {
+			img_list[count] = imageDao.retrieve((long)row.get("id")).get();
+			dist_list[count] = 1;
+			count++;
+		}
+		return Arrays.asList(img_list, dist_list);
 	}
 
 	public List<Object> getSimilarImages2D(long id, int size){
