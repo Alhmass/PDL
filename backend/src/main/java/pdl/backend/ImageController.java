@@ -181,4 +181,50 @@ public class ImageController {
     }
     return nodes;
   }
+
+  @RequestMapping(value="/images/{id}/filtre", method=RequestMethod.GET, produces = "application/json")
+  @ResponseBody
+  public ResponseEntity<?> imageFilter(@PathVariable("id") long id, @RequestParam("filter") String filter, @RequestParam("bright") Optional<String> bright,
+  @RequestParam("mean") Optional<String> mean, @RequestParam("r") Optional<String> r, @RequestParam("g") Optional<String> g, @RequestParam("b") Optional<String> b){
+    if (this.imageDao.retrieve(id).isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    Image res_image;
+    if (filter.equals("brightness")){
+      if (bright.isPresent()){
+        int n = Integer.parseInt(bright.get());
+        res_image = Filtres.Brightness(this.imageDao.retrieve(id).get(), n);
+      } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    else if (filter.equals("GrayLevel")){
+      res_image = Filtres.GrayLevel(this.imageDao.retrieve(id).get());
+    }
+    else if (filter.equals("mean")){
+      if (mean.isPresent()){
+        int n = Integer.parseInt(mean.get());
+        res_image = Filtres.Mean(this.imageDao.retrieve(id).get(), n);
+      } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    else if (filter.equals("colors")){
+      if (r.isPresent() && g.isPresent() && b.isPresent()){
+        int cr = Integer.parseInt(r.get());
+        int cg = Integer.parseInt(g.get());
+        int cb = Integer.parseInt(b.get());
+        res_image = Filtres.Coloration(this.imageDao.retrieve(id).get(), cr, cg, cb);
+      }else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    
+    ArrayNode nodes = mapper.createArrayNode();
+    ObjectNode node = mapper.createObjectNode();
+    node.put("name", res_image.getName());
+
+    node.put("MediaType", res_image.getMediaType(res_image.getName()));
+    nodes.add(node);
+
+    return ResponseEntity
+        .ok()
+        .body(nodes);
+  }
+  
 }
