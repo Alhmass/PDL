@@ -2,3 +2,5 @@
 */.DS_STORE
 .vscode/
 ./backend/src/main/resources/public/static
+
+./backend/images/filter/*

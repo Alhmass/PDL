@@ -92,7 +92,7 @@ public class Filtres {
                             res += imageOutput.getBand(i).get(x+u, y+v);
                         }
                     }
-                    if (res/(size*size) > 255) System.out.println("saturation");
+                    if (res/(size*size) > 255)
                     imageOutput.getBand(i).set(x, y, res/(size * size));
                 }
             }
