@@ -184,15 +184,14 @@ public class ImageController {
 
   @RequestMapping(value="/images/{id}/filtre", method=RequestMethod.GET, produces = "application/json")
   @ResponseBody
-  public ResponseEntity<?> imageFilter(@PathVariable("id") long id, @RequestParam("filter") String filter, @RequestParam("bright") Optional<String> bright,
-  @RequestParam("mean") Optional<String> mean, @RequestParam("r") Optional<String> r, @RequestParam("g") Optional<String> g, @RequestParam("b") Optional<String> b){
+  public ResponseEntity<?> imageFilter(@PathVariable("id") long id, @RequestParam("filter") String filter, @RequestParam("number") Optional<String> number){
     if (this.imageDao.retrieve(id).isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    Image res_image;
+    Image res_image = this.imageDao.retrieve(id).get();
     if (filter.equals("brightness")){
-      if (bright.isPresent()){
-        int n = Integer.parseInt(bright.get());
+      if (number.isPresent()){
+        int n = Integer.parseInt(number.get());
         res_image = Filtres.Brightness(this.imageDao.retrieve(id).get(), n);
       } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -200,21 +199,24 @@ public class ImageController {
       res_image = Filtres.GrayLevel(this.imageDao.retrieve(id).get());
     }
     else if (filter.equals("mean")){
-      if (mean.isPresent()){
-        int n = Integer.parseInt(mean.get());
+      if (number.isPresent()){
+        int n = Integer.parseInt(number.get());
         res_image = Filtres.Mean(this.imageDao.retrieve(id).get(), n);
       } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     else if (filter.equals("colors")){
-      if (r.isPresent() && g.isPresent() && b.isPresent()){
-        int cr = Integer.parseInt(r.get());
-        int cg = Integer.parseInt(g.get());
-        int cb = Integer.parseInt(b.get());
-        res_image = Filtres.Coloration(this.imageDao.retrieve(id).get(), cr, cg, cb);
-      }else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+        if (number.isPresent()){
+          //Take a number of 9 character and split it in 3 var r, g and b
+          //Exemple : 100020030 gives r = 100, g = 20, b = 30
+          String n = number.get();
+          int r = Integer.parseInt(n.substring(0, 3));
+          int g = Integer.parseInt(n.substring(3, 6));
+          int b = Integer.parseInt(n.substring(6, 9));
+          res_image = Filtres.Coloration(this.imageDao.retrieve(id).get(), r, g, b);
+        }
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
+      }
     else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    
     ArrayNode nodes = mapper.createArrayNode();
     ObjectNode node = mapper.createObjectNode();
     node.put("name", res_image.getName());
@@ -226,5 +228,5 @@ public class ImageController {
         .ok()
         .body(nodes);
   }
-  
 }
+  
