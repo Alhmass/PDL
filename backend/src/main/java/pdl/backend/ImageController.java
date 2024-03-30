@@ -209,3 +209,59 @@ public class ImageController {
         .body(nodes);
   }
 }
+
+  @RequestMapping(value="/images/{id}/filtre", method=RequestMethod.GET, produces = "application/json")
+  @ResponseBody
+  public ResponseEntity<?> imageFilter(@PathVariable("id") long id, @RequestParam("filter") String filter, @RequestParam("number") Optional<String> number){
+    if (this.imageDao.retrieve(id).isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    //Declaration of the image to return, set to the original image by default
+    Image res_image = this.imageDao.retrieve(id).get();
+
+    //Apply the filter "Gray Level" to the image, who convert the image to a gray level image
+    if (filter.equals("GrayLevel")){
+      res_image = Filtres.GrayLevel(this.imageDao.retrieve(id).get());
+    }else{
+      int n;
+
+      //Check if the parameter number is present and convert it to an integer
+      if (number.isPresent()){
+        n = Integer.parseInt(number.get());
+      } else {
+        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+      }
+
+      //Apply the "brightness" filter to the image, who change the brightness of the image
+      if (filter.equals("brightness")) res_image = Filtres.Brightness(this.imageDao.retrieve(id).get(), n);
+      
+      //Apply the "mean" filter to the image, who apply a blur effect to the image
+      else if (filter.equals("mean")) res_image = Filtres.Mean(this.imageDao.retrieve(id).get(), n);
+      
+      //Apply an "coloration" filter to the image, who change the color of each pixel depend of the RGB value given in the parameter number
+      else if (filter.equals("colors")){
+        String nb = number.get();
+        int r = Integer.parseInt(nb.substring(0, 3));
+        int g = Integer.parseInt(nb.substring(3, 6));
+        int b = Integer.parseInt(nb.substring(6, 9));
+        res_image = Filtres.Coloration(this.imageDao.retrieve(id).get(), r, g, b);
+      }else{
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    //Prepare the response
+    ArrayNode nodes = mapper.createArrayNode();
+    ObjectNode node = mapper.createObjectNode();
+    node.put("name", res_image.getName());
+    node.put("id", res_image.getId());
+    node.put("MediaType", res_image.getMediaType(res_image.getName()));
+    nodes.add(node);
+
+    //Return the response
+    return ResponseEntity
+        .ok()
+        .body(nodes);
+  }
+}
+  
