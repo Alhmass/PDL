@@ -208,7 +208,6 @@ public class ImageController {
         .ok()
         .body(nodes);
   }
-}
 
   @RequestMapping(value="/images/{id}/filtre", method=RequestMethod.GET, produces = "application/json")
   @ResponseBody
@@ -264,4 +263,3 @@ public class ImageController {
         .body(nodes);
   }
 }
-  
