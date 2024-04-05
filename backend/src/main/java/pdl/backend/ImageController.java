@@ -3,6 +3,7 @@ package pdl.backend;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -155,13 +156,17 @@ public class ImageController {
   }
 
   @RequestMapping(value = "/images", method = RequestMethod.POST)
-  public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file,
+  public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file, @RequestParam("tags") Optional<String> tag,
       RedirectAttributes redirectAttributes) throws IOException {
     if (file.getContentType().equals(MediaType.IMAGE_JPEG_VALUE)
         || file.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
       Image nimg = new Image(file.getOriginalFilename(), file.getBytes());
       this.imageDao.create(nimg);
-      this.sqlController.addImage(nimg, "");
+      if(tag.isPresent()) {
+        this.sqlController.addImage(nimg, tag.get());
+      } else {
+        this.sqlController.addImage(nimg, "");
+      }
       try {
         FileOutputStream nFile = new FileOutputStream("./images/" + file.getOriginalFilename());
         nFile.write(file.getBytes());
@@ -169,6 +174,15 @@ public class ImageController {
         nFile.close();
       } catch (IOException e) {
         throw new RuntimeException("Cannot create file in images folder!");
+      }
+      if(tag.isPresent() && !tag.get().equals("")) {
+        try {
+          FileWriter tagFile = new FileWriter("./images/tag/" + file.getOriginalFilename() + ".txt");
+          tagFile.append(tag.get());
+          tagFile.close();
+        } catch (Exception e) {
+          System.out.println("Failed to create tag file for : " + file.getOriginalFilename());
+        }
       }
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
