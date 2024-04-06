@@ -34,9 +34,10 @@ public class ImageControllerTests {
 
 	@BeforeAll
 	public static void reset() {
-  	// reset Image class static counter
-  	ReflectionTestUtils.setField(Image.class, "count", Long.valueOf(0));
+		// reset Image class static counter
+		ReflectionTestUtils.setField(Image.class, "count", Long.valueOf(0));
 	}
+
 	@Test
 	@Order(1)
 	public void getImageListShouldReturnSuccess() throws Exception {
@@ -59,7 +60,7 @@ public class ImageControllerTests {
 	@Test
 	@Order(4)
 	public void deleteImagesShouldReturnMethodNotAllowed() throws Exception {
-	this.mockMvc.perform(delete("/images")).andDo(print()).andExpect(status().isMethodNotAllowed());
+		this.mockMvc.perform(delete("/images")).andDo(print()).andExpect(status().isMethodNotAllowed());
 	}
 
 	@Test
@@ -78,9 +79,10 @@ public class ImageControllerTests {
 	@Order(7)
 	public void createImageShouldReturnSuccess() throws Exception {
 		final ClassPathResource imgFile = new ClassPathResource("test.jpg");
-		MockMultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", imgFile.getInputStream());
+		MockMultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", "image/jpeg",
+				imgFile.getInputStream());
 		this.mockMvc.perform(MockMvcRequestBuilders.multipart("/images").file(multipartFile)).andDo(print())
-				.andExpect(status().isOk());
+				.andExpect(status().isCreated());
 	}
 
 	@Test
@@ -96,8 +98,8 @@ public class ImageControllerTests {
 	public boolean checkIfFolderImageExist() throws Exception {
 		String env = "./src/test/java/pdl/backend/test/images";
 		File file = new File(env);
-		if (file.exists()) 
-				fail("Error: Le dossier image ne devrait pas exister");
+		if (file.exists())
+			fail("Error: Le dossier image ne devrait pas exister");
 		return true;
 	}
 
@@ -106,9 +108,9 @@ public class ImageControllerTests {
 	public boolean checkImageExtension() throws Exception {
 		String env = "./src/test/java/pdl/backend/images";
 		File file = new File(env);
-		if (file.exists()){
-			String[] extensions = { ".jpg", ".png", ".jpeg"};
-    		ImageFilter filter = new ImageFilter(extensions, 3);
+		if (file.exists()) {
+			String[] extensions = { ".jpg", ".png", ".jpeg" };
+			ImageFilter filter = new ImageFilter(extensions, 3);
 
 			String[] files = file.list(filter);
 			for (int i = 0; i < files.length; ++i) {
