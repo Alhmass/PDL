@@ -101,7 +101,7 @@ public class ImageController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     else {
       File toDelete = new File("./images/" + img.get().getName());
-      File toDeleteTag = new File("./images/tag/" + img.get().getName()+".txt");
+      File toDeleteTag = new File("./images/tag/" + img.get().getName() + ".txt");
       if (toDelete.exists())
         toDelete.delete();
       if (toDeleteTag.exists())
@@ -129,8 +129,8 @@ public class ImageController {
       res = this.sqlController.getSimilarImages2D(id, nb);
     } else if (descr.equals("histogram3D")) {
       res = this.sqlController.getSimilarImages3D(id, nb);
-    } else if(descr.equals("tags")) {
-      if(tag.isPresent()) {
+    } else if (descr.equals("tags")) {
+      if (tag.isPresent()) {
         res = this.sqlController.getSimilarTags(id, tag.get(), nb);
       } else {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -146,7 +146,7 @@ public class ImageController {
       node.put("id", res_img[img].getId());
       node.put("name", res_img[img].getName());
       node.put("similar_score", res_dist[img]);
-      node.put("MediaType", res_img[img].getMediaType(res_img[img].getName()));
+      node.put("type", res_img[img].getMediaType(res_img[img].getName()));
       node.put("size", res_img[img].getSize(res_img[img].getName()));
       nodes.add(node);
     }
@@ -156,13 +156,14 @@ public class ImageController {
   }
 
   @RequestMapping(value = "/images", method = RequestMethod.POST)
-  public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file, @RequestParam("tags") Optional<String> tag,
+  public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file,
+      @RequestParam("tags") Optional<String> tag,
       RedirectAttributes redirectAttributes) throws IOException {
     if (file.getContentType().equals(MediaType.IMAGE_JPEG_VALUE)
         || file.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
       Image nimg = new Image(file.getOriginalFilename(), file.getBytes());
       this.imageDao.create(nimg);
-      if(tag.isPresent()) {
+      if (tag.isPresent()) {
         this.sqlController.addImage(nimg, tag.get());
       } else {
         this.sqlController.addImage(nimg, "");
@@ -175,7 +176,7 @@ public class ImageController {
       } catch (IOException e) {
         throw new RuntimeException("Cannot create file in images folder!");
       }
-      if(tag.isPresent() && !tag.get().equals("")) {
+      if (tag.isPresent() && !tag.get().equals("")) {
         try {
           FileWriter tagFile = new FileWriter("./images/tag/" + file.getOriginalFilename() + ".txt");
           tagFile.append(tag.get());
@@ -184,7 +185,7 @@ public class ImageController {
           System.out.println("Failed to create tag file for : " + file.getOriginalFilename());
         }
       }
-      return new ResponseEntity<>(HttpStatus.OK);
+      return new ResponseEntity<>(HttpStatus.CREATED);
     } else {
       return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
@@ -198,7 +199,7 @@ public class ImageController {
       ObjectNode node = mapper.createObjectNode();
       node.put("name", item.getName());
       node.put("id", item.getId());
-      node.put("MediaType", item.getMediaType(item.getName()));
+      node.put("type", item.getMediaType(item.getName()));
       node.put("size", item.getSize(item.getName()));
       nodes.add(node);
     }
@@ -214,7 +215,7 @@ public class ImageController {
       ObjectNode node = mapper.createObjectNode();
       node.put("id", img.getId());
       node.put("name", img.getName());
-      node.put("MediaType", img.getMediaType(img.getName()));
+      node.put("type", img.getMediaType(img.getName()));
       node.put("size", img.getSize(img.getName()));
       nodes.add(node);
     }
@@ -223,55 +224,61 @@ public class ImageController {
         .body(nodes);
   }
 
-  @RequestMapping(value="/images/{id}/filtre", method=RequestMethod.GET, produces = "application/json")
+  @RequestMapping(value = "/images/{id}/filtre", method = RequestMethod.GET, produces = "application/json")
   @ResponseBody
-  public ResponseEntity<?> imageFilter(@PathVariable("id") long id, @RequestParam("filter") String filter, @RequestParam("number") Optional<String> number){
+  public ResponseEntity<?> imageFilter(@PathVariable("id") long id, @RequestParam("filter") String filter,
+      @RequestParam("number") Optional<String> number) {
     if (this.imageDao.retrieve(id).isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    //Declaration of the image to return, set to the original image by default
+    // Declaration of the image to return, set to the original image by default
     Image res_image = this.imageDao.retrieve(id).get();
 
-    //Apply the filter "Gray Level" to the image, who convert the image to a gray level image
-    if (filter.equals("GrayLevel")){
+    // Apply the filter "Gray Level" to the image, who convert the image to a gray
+    // level image
+    if (filter.equals("GrayLevel")) {
       res_image = Filtres.GrayLevel(this.imageDao.retrieve(id).get());
-    }else{
+    } else {
       int n;
 
-      //Check if the parameter number is present and convert it to an integer
-      if (number.isPresent()){
+      // Check if the parameter number is present and convert it to an integer
+      if (number.isPresent()) {
         n = Integer.parseInt(number.get());
       } else {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
       }
 
-      //Apply the "brightness" filter to the image, who change the brightness of the image
-      if (filter.equals("brightness")) res_image = Filtres.Brightness(this.imageDao.retrieve(id).get(), n);
-      
-      //Apply the "mean" filter to the image, who apply a blur effect to the image
-      else if (filter.equals("mean")) res_image = Filtres.Mean(this.imageDao.retrieve(id).get(), n);
-      
-      //Apply an "coloration" filter to the image, who change the color of each pixel depend of the RGB value given in the parameter number
-      else if (filter.equals("colors")){
+      // Apply the "brightness" filter to the image, who change the brightness of the
+      // image
+      if (filter.equals("brightness"))
+        res_image = Filtres.Brightness(this.imageDao.retrieve(id).get(), n);
+
+      // Apply the "mean" filter to the image, who apply a blur effect to the image
+      else if (filter.equals("mean"))
+        res_image = Filtres.Mean(this.imageDao.retrieve(id).get(), n);
+
+      // Apply an "coloration" filter to the image, who change the color of each pixel
+      // depend of the RGB value given in the parameter number
+      else if (filter.equals("colors")) {
         String nb = number.get();
         int r = Integer.parseInt(nb.substring(0, 3));
         int g = Integer.parseInt(nb.substring(3, 6));
         int b = Integer.parseInt(nb.substring(6, 9));
         res_image = Filtres.Coloration(this.imageDao.retrieve(id).get(), r, g, b);
-      }else{
+      } else {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
       }
     }
 
-    //Prepare the response
+    // Prepare the response
     ArrayNode nodes = mapper.createArrayNode();
     ObjectNode node = mapper.createObjectNode();
     node.put("name", res_image.getName());
     node.put("id", res_image.getId());
-    node.put("MediaType", res_image.getMediaType(res_image.getName()));
+    node.put("type", res_image.getMediaType(res_image.getName()));
     nodes.add(node);
 
-    //Return the response
+    // Return the response
     return ResponseEntity
         .ok()
         .body(nodes);
