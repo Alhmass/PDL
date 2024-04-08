@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -116,6 +118,16 @@ public class ImageController {
       this.imageDao.delete(img.get());
       return new ResponseEntity<>(HttpStatus.OK);
     }
+  }
+
+  @RequestMapping(value = "/images/{id}/tags", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+  @ResponseBody
+  public List<String> getImageTags(@PathVariable("id") long id) {
+    List<String> list = new ArrayList<>();
+    for (String item : this.sqlController.getTags(id)) {
+      list.add(item);
+    }
+    return list;
   }
 
   @RequestMapping(value = "/images/{id}/similar", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
@@ -230,7 +242,7 @@ public class ImageController {
         .body(nodes);
   }
 
-  @RequestMapping(value = "/images/{id}/filtre", method = RequestMethod.GET, produces = "application/json")
+  @RequestMapping(value = "/images/{id}/filter", method = RequestMethod.GET)
   @ResponseBody
   public ResponseEntity<?> imageFilter(@PathVariable("id") long id, @RequestParam("filter") String filter,
       @RequestParam("number") Optional<String> number) {
