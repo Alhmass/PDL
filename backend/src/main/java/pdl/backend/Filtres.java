@@ -92,8 +92,9 @@ public class Filtres {
                             res += imageOutput.getBand(i).get(x+u, y+v);
                         }
                     }
-                    if (res/(size*size) > 255)
-                    imageOutput.getBand(i).set(x, y, res/(size * size));
+                    int new_pix = res/(size*size);
+                    if (new_pix > 255) new_pix = 255;
+                    imageOutput.getBand(i).set(x, y, new_pix);
                 }
             }
         }
@@ -122,14 +123,21 @@ public class Filtres {
                 int colorG = imageOutput.getBand(1).get(x, y);
                 int colorB = imageOutput.getBand(2).get(x, y);
 
-                if (colorR + R >= 255) imageOutput.getBand(0).set(x, y, 255);
-                else imageOutput.getBand(0).set(x, y, colorR+R);
+                int newR = colorR + R;
+                int newG = colorG + G;
+                int newB = colorB + B;
 
-                if (colorG + G >= 255) imageOutput.getBand(1).set(x, y, 255);
-                else imageOutput.getBand(1).set(x, y, colorG+G);
+                if (newR < 0) imageOutput.getBand(0).set(x, y, 0);
+                if (newR >= 255) imageOutput.getBand(0).set(x, y, 255);
+                else imageOutput.getBand(0).set(x, y, newR);
 
-                if (colorB + B >= 255) imageOutput.getBand(2).set(x, y, 255);
-                else imageOutput.getBand(2).set(x, y, colorB+B);
+                if (newG < 0) imageOutput.getBand(1).set(x, y, 0);
+                if (newG >= 255) imageOutput.getBand(1).set(x, y, 255);
+                else imageOutput.getBand(1).set(x, y, newG);
+
+                if (newB < 0) imageOutput.getBand(2).set(x, y, 0);
+                if (newB >= 255) imageOutput.getBand(2).set(x, y, 255);
+                else imageOutput.getBand(2).set(x, y, newB);
             }
         }
 
