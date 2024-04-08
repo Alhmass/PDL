@@ -53,12 +53,6 @@ public class ImageController {
       throw new RuntimeException("The folder images does not exist");
     }
 
-    // check if the folder "images/filter" exist
-    File dirFilter = new File("./images/filter");
-    if (!dirFilter.exists() || !dirFilter.isDirectory()) {
-      dirFilter.mkdir();
-    }
-
     // Create the filter ".png", ".jpg" and ".jpeg"
     String[] extensions = { ".jpg", ".png", ".jpeg" };
     ImageFilter filter = new ImageFilter(extensions, 3);
@@ -242,7 +236,7 @@ public class ImageController {
         .body(nodes);
   }
 
-  @RequestMapping(value = "/images/{id}/filter", method = RequestMethod.GET)
+  @RequestMapping(value = "/images/{id}/filter", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
   @ResponseBody
   public ResponseEntity<?> imageFilter(@PathVariable("id") long id, @RequestParam("filter") String filter,
       @RequestParam("number") Optional<String> number) {
@@ -250,12 +244,13 @@ public class ImageController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     // Declaration of the image to return, set to the original image by default
-    Image res_image = this.imageDao.retrieve(id).get();
+    Image input_image = this.imageDao.retrieve(id).get();
+    Image output_image;
 
     // Apply the filter "Gray Level" to the image, who convert the image to a gray
     // level image
     if (filter.equals("GrayLevel")) {
-      res_image = Filtres.GrayLevel(this.imageDao.retrieve(id).get());
+      output_image = Filtres.GrayLevel(input_image);
     } else {
       int n;
 
@@ -269,11 +264,11 @@ public class ImageController {
       // Apply the "brightness" filter to the image, who change the brightness of the
       // image
       if (filter.equals("brightness"))
-        res_image = Filtres.Brightness(this.imageDao.retrieve(id).get(), n);
+        output_image = Filtres.Brightness(input_image, n);
 
       // Apply the "mean" filter to the image, who apply a blur effect to the image
       else if (filter.equals("mean"))
-        res_image = Filtres.Mean(this.imageDao.retrieve(id).get(), n);
+        output_image = Filtres.Mean(input_image, n);
 
       // Apply an "coloration" filter to the image, who change the color of each pixel
       // depend of the RGB value given in the parameter number
@@ -282,23 +277,23 @@ public class ImageController {
         int r = Integer.parseInt(nb.substring(0, 3));
         int g = Integer.parseInt(nb.substring(3, 6));
         int b = Integer.parseInt(nb.substring(6, 9));
-        res_image = Filtres.Coloration(this.imageDao.retrieve(id).get(), r, g, b);
+        output_image = Filtres.Coloration(input_image, r, g, b);
       } else {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
       }
     }
 
-    MediaType ImgType = null;
-    if (res_image.getName().endsWith(".png")) {
-      ImgType = MediaType.IMAGE_PNG;
-    } else {
-      ImgType = MediaType.IMAGE_JPEG;
-    }
+    imageDao.create(output_image);
+
+    ArrayNode nodes = mapper.createArrayNode();
+      ObjectNode node = mapper.createObjectNode();
+      node.put("id", output_image.getId());
+      node.put("name", output_image.getName());
+      nodes.add(node);
 
     // Return the response
     return ResponseEntity
         .ok()
-        .contentType(ImgType)
-        .body(res_image.getData());
+        .body(nodes);
   }
 }
