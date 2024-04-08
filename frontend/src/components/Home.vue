@@ -13,6 +13,7 @@ const selected = ref<SelectedOption>({ id: -1, name: '' });
 const imageList = ref<ImageType[]>([]);
 const imageToDisplay = ref<ImageType[]>([]);
 const searchQuery = ref("");
+const searchNotFound = ref(false);
 utils.getImages(imageList.value);
 function downloadImage() {
   api.getImage(selected.value.id).then((data) => {
@@ -44,6 +45,7 @@ function deleteImage() {
   })
 }
 function loadImage() {
+  searchNotFound.value = false;
   imageToDisplay.value.splice(0, imageToDisplay.value.length)
   imageList.value.forEach(image => {
     if (image.id === selected.value.id) {
@@ -55,7 +57,13 @@ function loadImage() {
 function loadImageByTag() {
   if (searchQuery.value !== "") {
     api.getImageByTags(searchQuery.value).then((data) => {
-      imageToDisplay.value = data;
+      if (data.length === 0) {
+        searchNotFound.value = true;
+        imageToDisplay.value.splice(0, imageToDisplay.value.length);
+      } else {
+        searchNotFound.value = false;
+        imageToDisplay.value = data;
+      }
       selected.value.id = -1;
       selected.value.name = '';
     }).catch(e => {
@@ -68,6 +76,7 @@ function loadImageByTag() {
 <template>
   <div class="searchByTag">
     <h3>Search image by tag</h3>
+    <span v-if="searchNotFound" class="searchnotfound">No image found!</span>
     <div class="searchContainer">
       <input v-model="searchQuery" type="search" class="searchBar" placeholder="Search..."
         @keyup.enter="loadImageByTag()">
@@ -77,13 +86,13 @@ function loadImageByTag() {
   <div>
     <h3>Choose an image</h3>
     <select v-model="selected" @change="loadImage()">
-      <option disabled value="">Selectionner une image</option>
+      <option disabled value="">Select an image</option>
       <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}
       </option>
     </select>
-    <button v-if="selected" @click="downloadImage()">Télécharger</button>
+    <button v-if="selected" @click="downloadImage()">Download</button>
     <button v-else disabled>Télécharger</button>
-    <button v-if="selected" @click="deleteImage()">Supprimer</button>
+    <button v-if="selected" @click="deleteImage()">Delete</button>
     <button v-else disabled>Supprimer</button>
     <hr />
   </div>

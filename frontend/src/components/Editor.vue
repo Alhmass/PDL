@@ -62,7 +62,7 @@ async function imageUploaded(newImage: File) {
     <div class="selectorContainer">
       <h3>Choose an image</h3>
       <select v-model="selected" @change="loadImage()">
-        <option disabled value="">Selectionner une image</option>
+        <option disabled value="">Choose an image</option>
         <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}
         </option>
       </select>

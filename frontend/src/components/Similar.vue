@@ -60,14 +60,14 @@ api.getImageList()
   <hr />
   <h3>Show similar images</h3>
   <select v-model="descriptor">
-    <option disabled value="">Selectionner un descripteur</option>
-    <option :value="{ name: 'histogram2D' }">Histogramme 2D Teinte/Saturation</option>
-    <option :value="{ name: 'histogram3D' }">Histogramme 3D RGB</option>
+    <option disabled value="">Select a descriptor</option>
+    <option :value="{ name: 'histogram2D' }">Histogram 2D Hue/Saturation</option>
+    <option :value="{ name: 'histogram3D' }">Histogram 3D RGB</option>
   </select>
-  <input type="number" id="nbImages" placeholder="Nombre d'images à afficher" min="1" :max="maxImage" />
-  <button v-if="descriptor && maxImage >= 1" @click="showSimilar()">Afficher</button>
-  <button v-else disabled>Afficher</button>
-  <p v-if="maxImage < 1">Aucune autre image n'est présente sur le serveur</p>
+  <input type="number" id="nbImages" placeholder="Number of image to display" min="1" :max="maxImage" />
+  <button v-if="descriptor && maxImage >= 1" @click="showSimilar()">View</button>
+  <button v-else disabled>View</button>
+  <p v-if="maxImage < 1">No other image found on the server!</p>
   <hr />
   <div v-if="descriptor" class="image_container">
     <div v-for="image in imageList">
