@@ -51,6 +51,12 @@ public class ImageController {
       throw new RuntimeException("The folder images does not exist");
     }
 
+    // check if the folder "images/filter" exist
+    File dirFilter = new File("./images/filter");
+    if (!dirFilter.exists() || !dirFilter.isDirectory()) {
+      dirFilter.mkdir();
+    }
+
     // Create the filter ".png", ".jpg" and ".jpeg"
     String[] extensions = { ".jpg", ".png", ".jpeg" };
     ImageFilter filter = new ImageFilter(extensions, 3);
@@ -270,17 +276,17 @@ public class ImageController {
       }
     }
 
-    // Prepare the response
-    ArrayNode nodes = mapper.createArrayNode();
-    ObjectNode node = mapper.createObjectNode();
-    node.put("name", res_image.getName());
-    node.put("id", res_image.getId());
-    node.put("type", res_image.getMediaType(res_image.getName()));
-    nodes.add(node);
+    MediaType ImgType = null;
+    if (res_image.getName().endsWith(".png")) {
+      ImgType = MediaType.IMAGE_PNG;
+    } else {
+      ImgType = MediaType.IMAGE_JPEG;
+    }
 
     // Return the response
     return ResponseEntity
         .ok()
-        .body(nodes);
+        .contentType(ImgType)
+        .body(res_image.getData());
   }
 }
