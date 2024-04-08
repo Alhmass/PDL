@@ -8,7 +8,18 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Filtres {
+
+    public static Image saveImage(Planar<GrayU8> imageOutput, String name) {
+
+        UtilImageIO.saveImage(imageOutput, "./images/" + name);
     
+        File file = new File("./images/" + name);
+        byte[] byteArray = new byte[(int) file.length()];
+
+
+        return new Image(name, byteArray);
+    }
+
     public static Image Brightness(Image img, int intensity){
         String imagePath = "./images/" + img.getName();
 
@@ -27,16 +38,8 @@ public class Filtres {
             }
         }
 
-        String outputPath = "./images/filter/brightness_" + img.getName();
-        UtilImageIO.saveImage(imageOutput, outputPath);
-        
-        File file = new File("./images/filter/brightness_" + img.getName());
-        byte[] byteArray = new byte[(int) file.length()];
-
-
-        Image newImg = new Image("brightness_"+img.getName(), byteArray);
-
-        return newImg;
+        String outputPath = "brightness_" + img.getName();
+        return saveImage(imageOutput, outputPath);
     }
 
     public static Image GrayLevel(Image img){
@@ -63,16 +66,8 @@ public class Filtres {
             }
         }
 
-        String outputPath = "./images/filter/gray_" + img.getName();
-        UtilImageIO.saveImage(imageOutput, outputPath);
-
-        File file = new File("./images/filter/gray_" + img.getName());
-        byte[] byteArray = new byte[(int) file.length()];
-
-
-        Image newImg = new Image("gray_"+img.getName(), byteArray);
-
-        return newImg;
+        String outputPath = "gray_" + img.getName();
+        return saveImage(imageOutput, outputPath);
     }
 
     public static Image Mean(Image img, int size){
@@ -99,16 +94,8 @@ public class Filtres {
             }
         }
 
-        String outputPath = "./images/filter/mean_" + img.getName();
-        UtilImageIO.saveImage(imageOutput, outputPath);
-
-        File file = new File("./images/filter/mean_" + img.getName());
-        byte[] byteArray = new byte[(int) file.length()];
-
-
-        Image newImg = new Image("mean_"+img.getName(), byteArray);
-
-        return newImg;
+        String outputPath = "mean_" + img.getName();
+        return saveImage(imageOutput, outputPath);
     }
 
     public static Image Coloration(Image img, int R, int G, int B){
@@ -141,15 +128,7 @@ public class Filtres {
             }
         }
 
-        String outputPath = "./images/filter/coloration_" + img.getName();
-        UtilImageIO.saveImage(imageOutput, outputPath);
-
-        File file = new File("./images/filter/coloration_" + img.getName());
-        byte[] byteArray = new byte[(int) file.length()];
-
-
-        Image newImg = new Image("coloration_"+img.getName(), byteArray);
-
-        return newImg;
+        String outputPath = "coloration_" + img.getName();
+        return saveImage(imageOutput, outputPath);
     }
 }
