@@ -17,7 +17,8 @@ const imageToDisplay = ref<ImageType>();
 const redRange = ref(0);
 const blueRange = ref(0);
 const greenRange = ref(0);
-const otherRange = ref(0);
+const brightRange = ref(0);
+const meanRange = ref(1);
 utils.getImages(imageList.value);
 function downloadImage() {
   api.getImage(selected.value.id).then((data) => {
@@ -55,6 +56,11 @@ async function imageUploaded(newImage: File) {
     console.log(e);
   }
 }
+
+function applyFilter() {
+  console.log("todo");
+}
+
 </script>
 
 <template>
@@ -99,19 +105,30 @@ async function imageUploaded(newImage: File) {
             <label for="blueRange">B</label>
           </div>
         </div>
-        <div v-else class="otherSlider">
+        <div v-else-if='selectedFilter === "brightness"' class="brightSlider">
           <div>
-            <span class="value-display" id="otherValueDisplay">{{ otherRange }}</span>
-            <input v-model="otherRange" type="range" id="oslider" name="oslider" min="0" max="100" value="0" />
-            <label for="oslider">{{ selectedFilter }}</label>
+            <span class="value-display" id="brightValueDisplay">{{ brightRange }}</span>
+            <input v-model="brightRange" type="range" id="brightSlider" name="brightSlider" min="0" max="255"
+              value="0" />
+            <label for="brightSlider">{{ selectedFilter }}</label>
+          </div>
+        </div>
+        <div v-else-if='selectedFilter === "mean"' class="brightSlider">
+          <div>
+            <span class="value-display" id="meanValueDisplay">{{ meanRange }}</span>
+            <input v-model="meanRange" type="range" id="meanSlider" name="meanSlider" min="1" max="99" step="2"
+              value="1" />
+            <label for="meanSlider">{{ selectedFilter }}</label>
           </div>
         </div>
       </div>
-      <button v-if="selectedFilter">Apply</button>
+      <button v-if="selectedFilter" @click="applyFilter()">Apply</button>
     </div>
     <div class="image_container">
       <Image :key="imageToDisplay.id" :id="imageToDisplay.id" @click="utils.gotoImage(imageToDisplay.id)" />
-      <div><button @click="downloadImage()">Download</button></div>
+      <div>
+        <button @click="downloadImage()">Download</button>
+      </div>
     </div>
   </div>
 </template>

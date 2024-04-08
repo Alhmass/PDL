@@ -9,6 +9,7 @@ import router from '@/router';
 const props = defineProps<{ id: number }>()
 
 const imageList = ref<ImageSimilarType[]>([]);
+const tags = ref<string[]>([]);
 
 const maxImage = ref(0);
 
@@ -16,9 +17,10 @@ interface SelectedDescr {
   name: string;
 }
 const descriptor = ref<SelectedDescr>({ name: '' });
+const tagSelect = ref("");
 function showSimilar() {
   let nbImages = parseInt((document.getElementById("nbImages") as HTMLInputElement).value);
-  api.getImageListSimilar(props.id, descriptor.value.name, nbImages)
+  api.getImageListSimilar(props.id, descriptor.value.name, nbImages, tagSelect?.value)
     .then((data) => {
       imageList.value = data;
     })
@@ -53,6 +55,14 @@ api.getImageList()
   .catch(e => {
     console.log(e.message);
   });
+
+api.getImageTags(props.id)
+  .then((data) => {
+    tags.value = data;
+  })
+  .catch(e => {
+    console.log(e.message);
+  })
 </script>
 
 <template>
@@ -63,16 +73,24 @@ api.getImageList()
     <option disabled value="">Select a descriptor</option>
     <option :value="{ name: 'histogram2D' }">Histogram 2D Hue/Saturation</option>
     <option :value="{ name: 'histogram3D' }">Histogram 3D RGB</option>
+    <option :value="{ name: 'tags' }">Tags</option>
   </select>
   <input type="number" id="nbImages" placeholder="Number of image to display" min="1" :max="maxImage" />
-  <button v-if="descriptor && maxImage >= 1" @click="showSimilar()">View</button>
+  <select v-if="descriptor.name == 'tags' && tags.length > 1" v-model="tagSelect">
+    <option disabled value="">Select a tag</option>
+    <option v-for="tag in tags" :value="tag" :key="tag">{{ tag }}
+    </option>
+  </select>
+  <button v-if="descriptor && maxImage >= 1 && descriptor.name !== 'tags'" @click="showSimilar()">View</button>
+  <button v-else-if="descriptor.name === 'tags' && tags.length > 1" @click="showSimilar()">View</button>
   <button v-else disabled>View</button>
-  <p v-if="maxImage < 1">No other image found on the server!</p>
+  <span v-if="maxImage < 1">No other image found on the server!</span>
+  <span v-else-if="descriptor.name === 'tags' && tags.length <= 1">This image doesn't have any tag!</span>
   <hr />
   <div v-if="descriptor" class="image_container">
     <div v-for="image in imageList">
       <Image :id="image.id" />
-      <p class="similar_score">score : {{ Math.round(image.similar_score) }}</p>
+      <p v-if="descriptor.name !== 'tags'" class="similar_score">score : {{ Math.round(image.similar_score) }}</p>
     </div>
   </div>
 </template>
