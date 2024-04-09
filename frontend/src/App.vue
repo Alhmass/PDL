@@ -14,6 +14,9 @@
         <li>
           <router-link to="/upload">Upload</router-link>
         </li>
+        <li>
+          <router-link to="/editor">Editor</router-link>
+        </li>
       </ul>
     </nav>
 
@@ -30,6 +33,7 @@
   font-family: Arial, Helvetica, sans-serif;
   color: #2c3e50;
 }
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -37,9 +41,11 @@ ul {
   overflow: hidden;
   background-color: #333;
 }
+
 li {
   float: left;
 }
+
 li a {
   display: block;
   color: white;
@@ -47,6 +53,7 @@ li a {
   padding: 14px 16px;
   text-decoration: none;
 }
+
 .error {
   color: red;
   font-weight: bold;
