@@ -6,6 +6,8 @@ import boofcv.struct.image.GrayU8;
 import boofcv.struct.image.Planar;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class Filtres {
 
@@ -15,7 +17,11 @@ public class Filtres {
     
         File file = new File("./images/" + name);
         byte[] byteArray = new byte[(int) file.length()];
-
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            inputStream.read(byteArray);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
 
         return new Image(name, byteArray);
     }
