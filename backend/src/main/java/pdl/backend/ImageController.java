@@ -203,6 +203,30 @@ public class ImageController {
     }
   }
 
+  @RequestMapping(value = "/images/{id}/edit/tags", method = RequestMethod.POST)
+  public ResponseEntity<?> modifyTags(@PathVariable("id") long id, @RequestParam("tags") String tag) {
+    try {
+      Image img = imageDao.retrieve(id).get();
+      File fileTag = new File("./images/tag/" + img.getName() + ".txt");
+      if (fileTag.exists()) {
+        fileTag.delete();
+      }
+      try {
+        if (!tag.equals("")) {
+          FileWriter tf = new FileWriter("./images/tag/" + img.getName() + ".txt");
+          tf.append(tag);
+          tf.close();
+        }
+      } catch (Exception e) {
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+      }
+      sqlController.modifyTags(id, tag);
+      return new ResponseEntity<>(HttpStatus.CREATED);
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @RequestMapping(value = "/images", method = RequestMethod.GET, produces = "application/json")
   @ResponseBody
   public ArrayNode getImageList() {
@@ -250,18 +274,18 @@ public class ImageController {
 
     String f;
     // Check if the image already exist
-    if (filter.equals("GrayLevel")){
+    if (filter.equals("GrayLevel")) {
       f = "gray";
-    }else{
+    } else {
       f = filter;
     }
 
-    //Check if the file already exist
-    if (Filtres.checkIfExist(f, input_image.getName())){
+    // Check if the file already exist
+    if (Filtres.checkIfExist(f, input_image.getName())) {
       long Oid = -1;
-      //find the id of the file
+      // find the id of the file
       for (Image img : imageDao.retrieveAll()) {
-        if (img.getName().equals(f+"_"+input_image.getName())){
+        if (img.getName().equals(f + "_" + input_image.getName())) {
           Oid = img.getId();
           break;
         }
@@ -269,10 +293,10 @@ public class ImageController {
 
       sqlController.deleteImage(Oid);
       imageDao.delete(input_image);
-      File file = new File("./images/"+f+"_"+input_image.getName());
+      File file = new File("./images/" + f + "_" + input_image.getName());
       file.delete();
 
-      File fileTag = new File("./images/"+f+"_"+input_image.getName());
+      File fileTag = new File("./images/" + f + "_" + input_image.getName());
       fileTag.delete();
     }
 
@@ -297,13 +321,13 @@ public class ImageController {
         output_image = Filtres.Brightness(input_image, n);
         tags += "BrightnessFilter";
 
-      // Apply the "mean" filter to the image, who apply a blur effect to the image
+        // Apply the "mean" filter to the image, who apply a blur effect to the image
       } else if (filter.equals("mean")) {
         output_image = Filtres.Mean(input_image, n);
         tags += "MeanFilter";
 
-      // Apply an "coloration" filter to the image, who change the color of each pixel
-      // depend of the RGB value given in the parameter number
+        // Apply an "coloration" filter to the image, who change the color of each pixel
+        // depend of the RGB value given in the parameter number
       } else if (filter.equals("colors")) {
         String nb = number.get();
         int r = Integer.parseInt(nb.substring(0, 3));
@@ -319,17 +343,17 @@ public class ImageController {
 
     imageDao.create(output_image);
     String[] daddyTags = sqlController.getTags(id);
-    for(String t : daddyTags) {
+    for (String t : daddyTags) {
       tags += "@";
       tags += t;
     }
     sqlController.addImage(output_image, tags);
 
     ArrayNode nodes = mapper.createArrayNode();
-      ObjectNode node = mapper.createObjectNode();
-      node.put("id", output_image.getId());
-      node.put("name", output_image.getName());
-      nodes.add(node);
+    ObjectNode node = mapper.createObjectNode();
+    node.put("id", output_image.getId());
+    node.put("name", output_image.getName());
+    nodes.add(node);
 
     // Return the response
     return ResponseEntity

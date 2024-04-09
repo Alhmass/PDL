@@ -40,7 +40,7 @@ public class SQLController implements InitializingBean {
 
 		for (Image img : this.imageDao.retrieveAll()) {
 			addImage(img, "");
-		}			
+		}
 	}
 
 	public void addImage(Image img, String tags) {
@@ -58,12 +58,12 @@ public class SQLController implements InitializingBean {
 			} catch (Exception e) {
 				System.out.println("Failed to generate histogram : " + img.getName());
 			}
-			if(tags.equals("")) {
+			if (tags.equals("")) {
 				try {
 					FileReader file_tag = new FileReader("./images/tag/" + img.getName() + ".txt");
 					int c;
-					while((c = file_tag.read()) != -1) {
-						tags += (char)c;
+					while ((c = file_tag.read()) != -1) {
+						tags += (char) c;
 					}
 					file_tag.close();
 				} catch (Exception e) {
@@ -96,10 +96,14 @@ public class SQLController implements InitializingBean {
 		String request = "SELECT id FROM images WHERE tags LIKE '%" + tag + "%'";
 		List<Map<String, Object>> res = this.jdbcTemplate.queryForList(request);
 		List<Image> img_list = new ArrayList<Image>();
-		for(Map<String, Object> row : res) {
-			img_list.add(imageDao.retrieve((long)row.get("id")).get());
+		for (Map<String, Object> row : res) {
+			img_list.add(imageDao.retrieve((long) row.get("id")).get());
 		}
 		return img_list;
+	}
+
+	public void modifyTags(long id, String tags) {
+		this.jdbcTemplate.update("UPDATE images SET tags = ? WHERE id = ? ", tags, id);
 	}
 
 	public List<Object> getSimilarTags(long id, String tag, int size) {
@@ -108,37 +112,39 @@ public class SQLController implements InitializingBean {
 		Image[] img_list = new Image[res.size()];
 		double[] dist_list = new double[res.size()];
 		int count = 0;
-		for(Map<String, Object> row : res) {
-			img_list[count] = imageDao.retrieve((long)row.get("id")).get();
+		for (Map<String, Object> row : res) {
+			img_list[count] = imageDao.retrieve((long) row.get("id")).get();
 			dist_list[count] = 1;
 			count++;
 		}
 		return Arrays.asList(img_list, dist_list);
 	}
 
-	public List<Object> getSimilarImages2D(long id, int size){
-		String query = "SELECT id, histogram2D <-> (SELECT histogram2D FROM images WHERE id = " + id + ") AS distance FROM images WHERE id != " + id + " ORDER BY distance LIMIT " + size;
-		List<Map<String, Object>> res = this.jdbcTemplate.queryForList(query);
-		Image[] img_list = new Image[res.size()];
-		double[] dist_list = new double[res.size()];
-		int count = 0;
-		for(Map<String, Object> row : res) {
-			img_list[count] = imageDao.retrieve((long)row.get("id")).get();
-			dist_list[count] = (double)row.get("distance");
-			count++;
-		}
-		return Arrays.asList(img_list, dist_list);
-	}
-
-	public List<Object> getSimilarImages3D(long id, int size){
-		String query = "SELECT id, histogram3D <-> (SELECT histogram3D FROM images WHERE id = " + id + ") AS distance FROM images WHERE id != " + id + " ORDER BY distance LIMIT " + size;
+	public List<Object> getSimilarImages2D(long id, int size) {
+		String query = "SELECT id, histogram2D <-> (SELECT histogram2D FROM images WHERE id = " + id
+				+ ") AS distance FROM images WHERE id != " + id + " ORDER BY distance LIMIT " + size;
 		List<Map<String, Object>> res = this.jdbcTemplate.queryForList(query);
 		Image[] img_list = new Image[res.size()];
 		double[] dist_list = new double[res.size()];
 		int count = 0;
 		for (Map<String, Object> row : res) {
-			img_list[count] = imageDao.retrieve((long)row.get("id")).get();
-			dist_list[count] = (double)row.get("distance");
+			img_list[count] = imageDao.retrieve((long) row.get("id")).get();
+			dist_list[count] = (double) row.get("distance");
+			count++;
+		}
+		return Arrays.asList(img_list, dist_list);
+	}
+
+	public List<Object> getSimilarImages3D(long id, int size) {
+		String query = "SELECT id, histogram3D <-> (SELECT histogram3D FROM images WHERE id = " + id
+				+ ") AS distance FROM images WHERE id != " + id + " ORDER BY distance LIMIT " + size;
+		List<Map<String, Object>> res = this.jdbcTemplate.queryForList(query);
+		Image[] img_list = new Image[res.size()];
+		double[] dist_list = new double[res.size()];
+		int count = 0;
+		for (Map<String, Object> row : res) {
+			img_list[count] = imageDao.retrieve((long) row.get("id")).get();
+			dist_list[count] = (double) row.get("distance");
 			count++;
 		}
 		return Arrays.asList(img_list, dist_list);
