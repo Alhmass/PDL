@@ -46,8 +46,11 @@ async function imageUploaded(newImage: File) {
   try {
     await utils.getImages(imageList.value);
     imageList.value.forEach(image => {
-      if (newImage.name === image.name)
+      if (newImage.name === image.name) {
         imageToDisplay.value = image;
+        selected.value.id = image.id;
+        selected.value.name = image.name;
+      }
     });
   } catch (e) {
     console.log(e);
@@ -98,7 +101,7 @@ function resetRange() {
       </select>
     </div>
     <h3 class="ortext">OR</h3>
-    <Upload @response="(image) => imageUploaded(image)" />
+    <Upload @response="(image) => imageUploaded(image)" :showDiv="false" />
   </div>
   <hr />
   <div v-if="imageToDisplay" class="editorContainer">
