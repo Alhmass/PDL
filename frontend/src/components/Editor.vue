@@ -56,9 +56,18 @@ async function imageUploaded(newImage: File) {
 
 function applyFilter() {
   if (imageToDisplay.value) {
-    api.getImageFilter(imageToDisplay.value.id, selectedFilter.value, range.value.join('')).then((data) => {
+    let numbers;
+    if (selectedFilter.value === "colors") {
+      const formattedNumbers = range.value.map(num => num.toString().padStart(3, '0'));
+      numbers = formattedNumbers.join('');
+    } else
+      numbers = range.value.join('');
+    api.getImageFilter(imageToDisplay.value.id, selectedFilter.value, numbers).then((data) => {
       utils.getImages(imageList.value);
       imageToDisplay.value = data[0];
+      selectedFilter.value = "";
+      selected.value.id = data[0].id;
+      selected.value.name = data[0].name;
     }).catch(e => {
       console.log(e.message);
     })
@@ -69,7 +78,7 @@ function resetRange() {
   if (selectedFilter.value === "GrayLevel")
     range.value = []
   else if (selectedFilter.value === "colors")
-    range.value = [0, 0, 0];
+    range.value = [-255, -255, -255];
   else if (selectedFilter.value === "mean")
     range.value = [1];
   else
@@ -106,17 +115,17 @@ function resetRange() {
         <div v-if='selectedFilter === "colors"' class="sliderColors">
           <div>
             <span class="value-display" id="redValueDisplay">{{ range[0] }}</span>
-            <input v-model="range[0]" type="range" id="redRange" min="0" max="255" value="0">
+            <input v-model="range[0]" type="range" id="redRange" min="-255" max="255" value="-255">
             <label for="redRange">R</label>
           </div>
           <div>
             <span class="value-display" id="greenValueDisplay">{{ range[1] }}</span>
-            <input v-model="range[1]" type="range" id="greenRange" min="0" max="255" value="0">
+            <input v-model="range[1]" type="range" id="greenRange" min="-255" max="255" value="-255">
             <label for="greenRange">G</label>
           </div>
           <div>
             <span class="value-display" id="blueValueDisplay">{{ range[2] }}</span>
-            <input v-model="range[2]" type="range" id="blueRange" min="0" max="255" value="0">
+            <input v-model="range[2]" type="range" id="blueRange" min="-255" max="255" value="-255">
             <label for="blueRange">B</label>
           </div>
         </div>
@@ -130,7 +139,7 @@ function resetRange() {
         <div v-else-if='selectedFilter === "mean"' class="brightSlider">
           <div>
             <span class="value-display" id="meanValueDisplay">{{ range[0] }}</span>
-            <input v-model="range[0]" type="range" id="meanSlider" name="meanSlider" min="1" max="99" step="2"
+            <input v-model="range[0]" type="range" id="meanSlider" name="meanSlider" min="1" max="51" step="2"
               value="1" />
             <label for="meanSlider">{{ selectedFilter }}</label>
           </div>
