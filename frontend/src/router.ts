@@ -25,6 +25,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "upload",
     component: () => import("./components/Upload.vue"),
     props: true
+  },
+  {
+    path: "/editor",
+    name: "editor",
+    component: () => import("./components/Editor.vue"),
+    props: true
   }
 ];
 

@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { api } from '@/http-api';
 
 const target = ref<HTMLInputElement>();
-
+const emit = defineEmits(['response']);
 function submitFile() {
   if (target.value !== null && target.value !== undefined && target.value.files !== null) {
     const file = target.value.files[0];
@@ -14,6 +14,7 @@ function submitFile() {
     api.createImage(formData).then(() => {
       if (target.value !== undefined)
         target.value.value = '';
+      emit('response', file);
     }).catch(e => {
       console.log(e.message);
     });
@@ -37,5 +38,4 @@ function handleFileUpload(event: Event) {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

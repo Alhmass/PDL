@@ -2,9 +2,8 @@
 import { ref } from 'vue';
 import { api } from '@/http-api';
 import { ImageType } from '@/image'
-import { blob } from 'stream/consumers';
-import Image from './Image.vue'
-import router from '@/router';
+import Image from './Image.vue';
+import { utils } from '@/utils';
 
 interface SelectedOption {
   id: number;
@@ -12,78 +11,113 @@ interface SelectedOption {
 }
 const selected = ref<SelectedOption>({ id: -1, name: '' });
 const imageList = ref<ImageType[]>([]);
-getImageList();
-function getImageList() {
-  api.getImageList().then((data) => {
-    imageList.value = data;
+const imageToDisplay = ref<ImageType[]>([]);
+const searchQuery = ref("");
+const searchNotFound = ref(false);
+utils.getImages(imageList.value);
+function downloadImage() {
+  api.getImage(selected.value.id).then((data) => {
+    const response = data;
+    const reader = new window.FileReader();
+    reader.readAsDataURL(response);
+    reader.onload = function () {
+      const attribute = URL.createObjectURL(response);
+      const hdata = document.createElement('a');
+      hdata.href = attribute;
+      hdata.setAttribute('download', selected.value.name);
+      document.body.appendChild(hdata);
+      hdata.click();
+      URL.revokeObjectURL(attribute);
+    }
   }).catch(e => {
     console.log(e.message);
   });
 }
-function downloadImage() {
-    api.getImage(selected.value.id).then((data) => {
-        const response = data;
-        const reader = new window.FileReader();
-        reader.readAsDataURL(response);
-        reader.onload = function () {
-            const attribute = URL.createObjectURL(response);
-            const hdata = document.createElement('a');
-            hdata.href = attribute;
-            hdata.setAttribute('download', selected.value.name);
-            document.body.appendChild(hdata);
-            hdata.click();
-            URL.revokeObjectURL(attribute);
-  }
-    }).catch(e => {
-        console.log(e.message);
-    });
-}
 
 function deleteImage() {
-    api.deleteImage(selected.value.id).then((data) => {
-        getImageList();
-        let imageEl = document.querySelector(".preview");
-        imageEl?.setAttribute("src", '');
-    }).catch(e => {
-        console.log(e.message);
-    })
+  api.deleteImage(selected.value.id).then((data) => {
+    imageToDisplay.value = imageToDisplay.value.filter(item => item.id !== selected.value.id);
+    imageList.value = imageList.value.filter(item => item.id !== selected.value.id);
+    selected.value.id = -1;
+    selected.value.name = '';
+  }).catch(e => {
+    console.log(e.message);
+  })
 }
 function loadImage() {
-    api.getImage(selected.value.id).then((data) => { 
-        let imageEl = document.querySelector(".preview")
-        const reader = new window.FileReader();
-        reader.readAsDataURL(data);
-        reader.onload = function () {
-        const imageDataUrl = (reader.result as string);
-        imageEl?.setAttribute("src", imageDataUrl);
-        }
-    }).catch(e => {
-        console.log(e.message);
-    });
+  searchNotFound.value = false;
+  imageToDisplay.value.splice(0, imageToDisplay.value.length)
+  imageList.value.forEach(image => {
+    if (image.id === selected.value.id) {
+      imageToDisplay.value.push(image);
+    }
+  });
 }
-function gotoImage() {
-    router.push({ name: 'image', params: { id: selected.value.id } })
+
+function loadImageByTag() {
+  if (searchQuery.value !== "") {
+    api.getImageByTags(searchQuery.value).then((data) => {
+      if (data.length === 0) {
+        searchNotFound.value = true;
+        imageToDisplay.value.splice(0, imageToDisplay.value.length);
+      } else {
+        searchNotFound.value = false;
+        imageToDisplay.value = data;
+      }
+      selected.value.id = -1;
+      selected.value.name = '';
+    }).catch(e => {
+      console.log(e.message);
+    })
+  }
 }
 </script>
 
 <template>
+  <div class="searchByTag">
+    <h3>Search image by tag</h3>
+    <span v-if="searchNotFound" class="searchnotfound">No image found!</span>
+    <div class="searchContainer">
+      <input v-model="searchQuery" type="search" class="searchBar" placeholder="Search..."
+        @keyup.enter="loadImageByTag()">
+      <button type="submit" class="searchBtn" @click="loadImageByTag()">search</button>
+    </div>
+  </div>
   <div>
     <h3>Choose an image</h3>
     <select v-model="selected" @change="loadImage()">
-      <option disabled value="">Selectionner une image</option>
-      <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}</option>
+      <option disabled value="">Select an image</option>
+      <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}
+      </option>
     </select>
-    <button v-if="selected" @click="downloadImage()">Télécharger</button>
+    <button v-if="selected" @click="downloadImage()">Download</button>
     <button v-else disabled>Télécharger</button>
-    <button v-if="selected" @click="deleteImage()">Supprimer</button>
+    <button v-if="selected" @click="deleteImage()">Delete</button>
     <button v-else disabled>Supprimer</button>
     <hr />
-    <img v-if="selected" class="preview" src="" @click="gotoImage()">
+  </div>
+  <div v-if="imageToDisplay" class="image_container">
+    <Image v-for="image in imageToDisplay" :key="image.id" :id="image.id" @click="utils.gotoImage(image.id)" />
   </div>
 </template>
 
 <style scoped>
-img {
+button {
   cursor: pointer;
+}
+
+.image_container {
+  display: flex;
+  max-width: 100%;
+  justify-content: center;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  padding: 0 2em;
+}
+
+.image_container:deep(figure img) {
+  cursor: pointer;
+  width: auto;
+  max-height: 500px;
 }
 </style>
