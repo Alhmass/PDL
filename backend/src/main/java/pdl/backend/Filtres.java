@@ -150,4 +150,13 @@ public class Filtres {
         String outputPath = "coloration_" + img.getName();
         return saveImage(imageOutput, outputPath);
     }
+    
+    public static boolean checkIfExist(String filter, String name){
+        System.out.println(filter+"_"+name);
+
+        String newImg = filter+"_"+name; //Create the file name
+        File file = new File("./images/"+newImg); //Open the file
+        
+        return file.exists(); //Delete the file
+    }
 }
