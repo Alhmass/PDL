@@ -21,7 +21,7 @@ export const api = {
   createImage: (form: FormData): Promise<ImageType> => requests.post('images', form),
   deleteImage: (id: number): Promise<void> => requests.delete(`images/${id}`),
   getImageListSimilar: (id: number, descriptor: string, nb: number, tag?: string): Promise<ImageSimilarType[]> => requests.get(`images/${id}/similar`, { params: { number: nb, descriptor: descriptor, tags: tag }, }),
-  getImageFilter: (id: number, filter: string, nb: number): Promise<Blob> => requests.get(`images/${id}/filter`, { params: { filter: filter, number: nb } }),
+  getImageFilter: (id: number, filter: string, nb?: string): Promise<ImageType[]> => requests.get(`images/${id}/filter`, { params: { filter: filter, number: nb }, }),
   getImageByTags: (tags: string): Promise<ImageType[]> => requests.get(`images/search`, { params: { tags: tags } }),
   getImageTags: (id: number): Promise<string[]> => requests.get(`images/${id}/tags`, {})
 }

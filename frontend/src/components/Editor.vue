@@ -5,6 +5,7 @@ import { ImageType } from '@/image'
 import Image from './Image.vue';
 import { utils } from '@/utils';
 import Upload from './Upload.vue';
+import { computeStyles } from '@popperjs/core';
 
 interface SelectedOption {
   id: number;
@@ -14,11 +15,7 @@ const selected = ref<SelectedOption>({ id: -1, name: '' });
 const selectedFilter = ref("");
 const imageList = ref<ImageType[]>([]);
 const imageToDisplay = ref<ImageType>();
-const redRange = ref(0);
-const blueRange = ref(0);
-const greenRange = ref(0);
-const brightRange = ref(0);
-const meanRange = ref(1);
+const range = ref<number[]>([]);
 utils.getImages(imageList.value);
 function downloadImage() {
   api.getImage(selected.value.id).then((data) => {
@@ -58,7 +55,25 @@ async function imageUploaded(newImage: File) {
 }
 
 function applyFilter() {
-  console.log("todo");
+  if (imageToDisplay.value) {
+    api.getImageFilter(imageToDisplay.value.id, selectedFilter.value, range.value.join('')).then((data) => {
+      utils.getImages(imageList.value);
+      imageToDisplay.value = data[0];
+    }).catch(e => {
+      console.log(e.message);
+    })
+  }
+}
+
+function resetRange() {
+  if (selectedFilter.value === "GrayLevel")
+    range.value = []
+  else if (selectedFilter.value === "colors")
+    range.value = [0, 0, 0];
+  else if (selectedFilter.value === "mean")
+    range.value = [1];
+  else
+    range.value = [0];
 }
 
 </script>
@@ -80,7 +95,7 @@ function applyFilter() {
   <div v-if="imageToDisplay" class="editorContainer">
     <div class="toolboxContainer">
       <h3>Filter to apply</h3>
-      <select v-model="selectedFilter">
+      <select v-model="selectedFilter" @change="resetRange()">
         <option disabled value="">Filter</option>
         <option value="GrayLevel">GrayLevel</option>
         <option value="brightness">Brightness</option>
@@ -90,33 +105,32 @@ function applyFilter() {
       <div v-if="selectedFilter" class="filterContainer">
         <div v-if='selectedFilter === "colors"' class="sliderColors">
           <div>
-            <span class="value-display" id="redValueDisplay">{{ redRange }}</span>
-            <input v-model="redRange" type="range" id="redRange" min="0" max="255" value="0">
+            <span class="value-display" id="redValueDisplay">{{ range[0] }}</span>
+            <input v-model="range[0]" type="range" id="redRange" min="0" max="255" value="0">
             <label for="redRange">R</label>
           </div>
           <div>
-            <span class="value-display" id="greenValueDisplay">{{ greenRange }}</span>
-            <input v-model="greenRange" type="range" id="greenRange" min="0" max="255" value="0">
+            <span class="value-display" id="greenValueDisplay">{{ range[1] }}</span>
+            <input v-model="range[1]" type="range" id="greenRange" min="0" max="255" value="0">
             <label for="greenRange">G</label>
           </div>
           <div>
-            <span class="value-display" id="blueValueDisplay">{{ blueRange }}</span>
-            <input v-model="blueRange" type="range" id="blueRange" min="0" max="255" value="0">
+            <span class="value-display" id="blueValueDisplay">{{ range[2] }}</span>
+            <input v-model="range[2]" type="range" id="blueRange" min="0" max="255" value="0">
             <label for="blueRange">B</label>
           </div>
         </div>
         <div v-else-if='selectedFilter === "brightness"' class="brightSlider">
           <div>
-            <span class="value-display" id="brightValueDisplay">{{ brightRange }}</span>
-            <input v-model="brightRange" type="range" id="brightSlider" name="brightSlider" min="0" max="255"
-              value="0" />
+            <span class="value-display" id="brightValueDisplay">{{ range[0] }}</span>
+            <input v-model="range[0]" type="range" id="brightSlider" name="brightSlider" min="0" max="255" value="0" />
             <label for="brightSlider">{{ selectedFilter }}</label>
           </div>
         </div>
         <div v-else-if='selectedFilter === "mean"' class="brightSlider">
           <div>
-            <span class="value-display" id="meanValueDisplay">{{ meanRange }}</span>
-            <input v-model="meanRange" type="range" id="meanSlider" name="meanSlider" min="1" max="99" step="2"
+            <span class="value-display" id="meanValueDisplay">{{ range[0] }}</span>
+            <input v-model="range[0]" type="range" id="meanSlider" name="meanSlider" min="1" max="99" step="2"
               value="1" />
             <label for="meanSlider">{{ selectedFilter }}</label>
           </div>
