@@ -248,6 +248,34 @@ public class ImageController {
     Image output_image;
     String tags = "";
 
+    String f;
+    // Check if the image already exist
+    if (filter.equals("GrayLevel")){
+      f = "gray";
+    }else{
+      f = filter;
+    }
+
+    //Check if the file already exist
+    if (Filtres.checkIfExist(f, input_image.getName())){
+      long Oid = -1;
+      //find the id of the file
+      for (Image img : imageDao.retrieveAll()) {
+        if (img.getName().equals(f+"_"+input_image.getName())){
+          Oid = img.getId();
+          break;
+        }
+      }
+
+      sqlController.deleteImage(Oid);
+      imageDao.delete(input_image);
+      File file = new File("./images/"+f+"_"+input_image.getName());
+      file.delete();
+
+      File fileTag = new File("./images/"+f+"_"+input_image.getName());
+      fileTag.delete();
+    }
+
     // Apply the filter "Gray Level" to the image, who convert the image to a gray
     // level image
     if (filter.equals("GrayLevel")) {
