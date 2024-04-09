@@ -246,11 +246,13 @@ public class ImageController {
     // Declaration of the image to return, set to the original image by default
     Image input_image = this.imageDao.retrieve(id).get();
     Image output_image;
+    String tags = "";
 
     // Apply the filter "Gray Level" to the image, who convert the image to a gray
     // level image
     if (filter.equals("GrayLevel")) {
       output_image = Filtres.GrayLevel(input_image);
+      tags += "GrayLevelFilter";
     } else {
       int n;
 
@@ -263,27 +265,37 @@ public class ImageController {
 
       // Apply the "brightness" filter to the image, who change the brightness of the
       // image
-      if (filter.equals("brightness"))
+      if (filter.equals("brightness")) {
         output_image = Filtres.Brightness(input_image, n);
+        tags += "BrightnessFilter";
 
       // Apply the "mean" filter to the image, who apply a blur effect to the image
-      else if (filter.equals("mean"))
+      } else if (filter.equals("mean")) {
         output_image = Filtres.Mean(input_image, n);
+        tags += "MeanFilter";
 
       // Apply an "coloration" filter to the image, who change the color of each pixel
       // depend of the RGB value given in the parameter number
-      else if (filter.equals("colors")) {
+      } else if (filter.equals("colors")) {
         String nb = number.get();
         int r = Integer.parseInt(nb.substring(0, 3));
         int g = Integer.parseInt(nb.substring(3, 6));
         int b = Integer.parseInt(nb.substring(6, 9));
         output_image = Filtres.Coloration(input_image, r, g, b);
+        tags += "ColorsFilter";
+
       } else {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
       }
     }
 
     imageDao.create(output_image);
+    String[] daddyTags = sqlController.getTags(id);
+    for(String t : daddyTags) {
+      tags += "@";
+      tags += t;
+    }
+    sqlController.addImage(output_image, tags);
 
     ArrayNode nodes = mapper.createArrayNode();
       ObjectNode node = mapper.createObjectNode();
