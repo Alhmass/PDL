@@ -12,9 +12,15 @@ import java.io.IOException;
 public class Filtres {
 
     public static Image saveImage(Planar<GrayU8> imageOutput, String name) {
+        // Check if the original file is a gif and change the extension to png
+        if (name.endsWith(".gif")){
+            name = name.replace(".gif", ".png");
+        }
 
+        // Save the image
         UtilImageIO.saveImage(imageOutput, "./images/" + name);
 
+        // Open the file associated with the image and take the bytes to create the new image in the Dao
         File file = new File("./images/" + name);
         byte[] byteArray = new byte[(int) file.length()];
         try (FileInputStream inputStream = new FileInputStream(file)) {

@@ -54,8 +54,8 @@ public class ImageController {
     }
 
     // Create the filter ".png", ".jpg" and ".jpeg"
-    String[] extensions = { ".jpg", ".png", ".jpeg" };
-    ImageFilter filter = new ImageFilter(extensions, 3);
+    String[] extensions = { ".jpg", ".png", ".jpeg", ".gif" };
+    ImageFilter filter = new ImageFilter(extensions, 4);
 
     // Store all the file name who ended with ".png" or ".jpg"
     String[] files = dirImage.list(filter);
@@ -172,7 +172,7 @@ public class ImageController {
       @RequestParam("tags") Optional<String> tag,
       RedirectAttributes redirectAttributes) throws IOException {
     if (file.getContentType().equals(MediaType.IMAGE_JPEG_VALUE)
-        || file.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
+        || file.getContentType().equals(MediaType.IMAGE_PNG_VALUE) || file.getContentType().equals("image/gif")) {
       Image nimg = new Image(file.getOriginalFilename(), file.getBytes());
       this.imageDao.create(nimg);
       if (tag.isPresent()) {
@@ -381,6 +381,14 @@ public class ImageController {
       tags += t;
     }
     sqlController.addImage(output_image, tags);
+
+    try {
+      FileWriter tagFile = new FileWriter("./images/tag/" + output_image.getName() + ".txt");
+      tagFile.append(tags);
+      tagFile.close();
+    } catch (Exception e) {
+      System.out.println("Failed to create tag file for : " + output_image.getName());
+    }
 
     ArrayNode nodes = mapper.createArrayNode();
     ObjectNode node = mapper.createObjectNode();
