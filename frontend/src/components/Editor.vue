@@ -124,36 +124,36 @@ function resetRange() {
         </select>
         <div v-if="selectedFilter" class="filterContainer">
           <div v-if='selectedFilter === "colors"' class="sliderColors">
-            <div>
+            <div class="sliderContainer">
               <span class="value-display" id="redValueDisplay">{{ range[0] }}</span>
               <input v-model="range[0]" type="range" id="redRange" min="-255" max="255" value="0">
-              <label for="redRange">R</label>
+              <label for="redRange" class="slider-descr">R</label>
             </div>
-            <div>
+            <div class="sliderContainer">
               <span class="value-display" id="greenValueDisplay">{{ range[1] }}</span>
               <input v-model="range[1]" type="range" id="greenRange" min="-255" max="255" value="0">
-              <label for="greenRange">G</label>
+              <label for="greenRange" class="slider-descr">G</label>
             </div>
-            <div>
+            <div class="sliderContainer">
               <span class="value-display" id="blueValueDisplay">{{ range[2] }}</span>
               <input v-model="range[2]" type="range" id="blueRange" min="-255" max="255" value="0">
-              <label for="blueRange">B</label>
+              <label for="blueRange" class="slider-descr">B</label>
             </div>
           </div>
           <div v-else-if='selectedFilter === "brightness"' class="brightSlider">
-            <div>
+            <div class="sliderContainer">
               <span class="value-display" id="brightValueDisplay">{{ range[0] }}</span>
               <input v-model="range[0]" type="range" id="brightSlider" name="brightSlider" min="0" max="255"
                 value="0" />
-              <label for="brightSlider">{{ selectedFilter }}</label>
+              <label for="brightSlider" class="slider-descr">{{ selectedFilter }}</label>
             </div>
           </div>
-          <div v-else-if='selectedFilter === "mean"' class="brightSlider">
-            <div>
+          <div v-else-if='selectedFilter === "mean"' class="meanSlider">
+            <div class="sliderContainer">
               <span class="value-display" id="meanValueDisplay">{{ range[0] }}</span>
               <input v-model="range[0]" type="range" id="meanSlider" name="meanSlider" min="1" max="21" step="2"
                 value="1" />
-              <label for="meanSlider">{{ selectedFilter }}</label>
+              <label for="meanSlider" class="slider-descr">{{ selectedFilter }}</label>
             </div>
           </div>
         </div>
