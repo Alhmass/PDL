@@ -1,27 +1,7 @@
 #app {
     text-align: center;
     font-family: $sofia;
-    color: #2c3e50;
-
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #333;
-
-        li {
-            float: left;
-
-            a {
-                display: block;
-                color: white;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-            }
-        }
-    }
+    color: $orange;
 
     .error {
         color: red;
@@ -29,4 +9,25 @@
         list-style-type: none;
         margin-top: 1em;
     }
+
+    button{
+        background: $psy-orange;
+        transition: background-color 0.62s ease;
+        box-sizing: border-box;
+        border: none;
+        margin: 0.5em;
+        border-radius: 0.8em;
+        text-align: center;
+        width: 6em;
+        height: 2.5em;
+
+        &:hover{
+            background-color: $psy-yellow;
+        }
+        color: $psy-dark-purple;
+    }
+}
+
+body {
+    background-color: $psy-dark-purple;
 }

@@ -224,13 +224,24 @@
 $sofia: 'Sofia Pro';
 
 // Colors
-$violet_f: #4A2477;
-$violet_c: #653DA2;
+$dark-purple: #4A2477;
+$light-purple: #653DA2;
 $orange : #E86A50;
 $argent : #8584B1;
-$rose : #BC4DC6;
-$jaune : #FBF78C;
-$bleu : #5498D0;
+$pink : #BC4DC6;
+$yellow : #FBF78C;
+$blue : #5498D0;
+
+// Colors psy
+$psy-dark-purple: #0F1226;
+$psy-light-purple: #2C2F73;
+$psy-pink: #D9556D;
+$psy-orange: #F2836B;
+$psy-yellow: #F2AE72;
+
+// Burger Menu
+$burger-menu-width: 3em;
+$transition-duration: 0.3s;
 
 // Transitions
 $ease: all 400ms ease-in-out;
