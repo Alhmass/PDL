@@ -45,8 +45,9 @@ function add_tag() {
 <template>
   <div class="uploadContainer">
     <h3>Upload an image</h3>
-    <div class="fileInput">
+    <div class="fileInputContainer">
       <input type="file" id="file" ref="file" @change="handleFileUpload" />
+      <span class="file-custom"></span>
     </div>
     <div>
       <div v-if="target?.value && props.showDiv" class="tags">
