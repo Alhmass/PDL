@@ -213,8 +213,6 @@
 // Variables
 // -----------
 
-$defaultFontSize: 20;
-
 // Images
 //$cursor: url("../assets/img/cursor.png");
 //$background: url("../assets/img/background.png");
@@ -226,14 +224,13 @@ $defaultFontSize: 20;
 $sofia: 'Sofia Pro';
 
 // Colors
-$white: #FCFEFF;
-$black: #06040D;
-$blue: #00B8FF;
-$light-blue: #90F5F9;
-$light-blue: rgb(144, 245, 249);
-$red: #BF2F20;
-$light-red: #FF746D;
-$green: rgba(111, 255, 147, 1);
+$violet_f: #4A2477;
+$violet_c: #653DA2;
+$orange : #E86A50;
+$argent : #8584B1;
+$rose : #BC4DC6;
+$jaune : #FBF78C;
+$bleu : #5498D0;
 
 // Transitions
 $ease: all 400ms ease-in-out;
