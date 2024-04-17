@@ -313,7 +313,8 @@ public class ImageController {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
       }
 
-      // Apply the "brightness" filter to the image, who change the brightness of the image
+      // Apply the "brightness" filter to the image, who change the brightness of the
+      // image
       if (filter.equals("brightness")) {
         n = Integer.parseInt(number.get());
         output_image = Filtres.Brightness(input_image, n);
@@ -330,40 +331,41 @@ public class ImageController {
       } else if (filter.equals("colors")) {
         String nb = number.get();
 
-        //Read the char, if it's a '-', then take the 3 next char and convert it to an negative integer, else take the 3 char and convert it to an integer
+        // Read the char, if it's a '-', then take the 3 next char and convert it to an
+        // negative integer, else take the 3 char and convert it to an integer
         int index = 0;
 
-        int r = 0; 
-        int g = 0; 
+        int r = 0;
+        int g = 0;
         int b = 0;
 
         // Red parsing
         if (nb.charAt(index) == '-') {
-          r = Integer.parseInt(nb.substring(index+1, index+4));
+          r = Integer.parseInt(nb.substring(index + 1, index + 4));
           r = r * -(1);
           index += 4;
         } else {
-          r = Integer.parseInt(nb.substring(index, index+3));
-          index+=3;
+          r = Integer.parseInt(nb.substring(index, index + 3));
+          index += 3;
         }
 
         // Green Parsing
         if (nb.charAt(index) == '-') {
-          g = Integer.parseInt(nb.substring(index+1, index+4));
+          g = Integer.parseInt(nb.substring(index + 1, index + 4));
           g = g * -(1);
-          index+=4;
+          index += 4;
         } else {
-          g = Integer.parseInt(nb.substring(index, index+3));
-          index+=3;
+          g = Integer.parseInt(nb.substring(index, index + 3));
+          index += 3;
         }
 
         // Blue Parsing
         if (nb.charAt(index) == '-') {
-          b = Integer.parseInt(nb.substring(index+1, index+4));
+          b = Integer.parseInt(nb.substring(index + 1, index + 4));
           b = b * -(1);
           index += 4;
         } else {
-          b = Integer.parseInt(nb.substring(index, index+3));
+          b = Integer.parseInt(nb.substring(index, index + 3));
           index += 3;
         }
         output_image = Filtres.Coloration(input_image, r, g, b);
@@ -377,8 +379,10 @@ public class ImageController {
     imageDao.create(output_image);
     String[] daddyTags = sqlController.getTags(id);
     for (String t : daddyTags) {
-      tags += "@";
-      tags += t;
+      if (!t.equals("")) {
+        tags += "@";
+        tags += t;
+      }
     }
     sqlController.addImage(output_image, tags);
 
