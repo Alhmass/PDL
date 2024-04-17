@@ -1,0 +1,18 @@
+.uploadContainer {
+    .fileInput {
+        margin-bottom: 1em;
+    }
+
+    .tags {
+        margin-bottom: 1em;
+        display: flex;
+        justify-content: center;
+
+        .tagtextarea {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-right: 0.5em;
+        }
+    }
+}
