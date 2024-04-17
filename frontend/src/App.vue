@@ -21,7 +21,6 @@
     </nav>
 
     <div>
-      <h1>PDL - L3</h1>
       <router-view />
     </div>
   </div>
