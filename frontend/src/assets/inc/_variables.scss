@@ -1,0 +1,59 @@
+/*
+// -----------
+// Fonts
+// -----------
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url('../assets/fonts/Rajdhani-Medium.eot');
+    src: url('../assets/fonts/Rajdhani-Medium.eot?#iefix') format('embedded-opentype'),
+        url('../assets/fonts/Rajdhani-Medium.woff2') format('woff2'),
+        url('../assets/fonts/Rajdhani-Medium.woff') format('woff'),
+        url('../assets/fonts/Rajdhani-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    src: url('../assets/fonts/Rajdhani-SemiBold.eot');
+    src: url('../assets/fonts/Rajdhani-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('../assets/fonts/Rajdhani-SemiBold.woff2') format('woff2'),
+        url('../assets/fonts/Rajdhani-SemiBold.woff') format('woff'),
+        url('../assets/fonts/Rajdhani-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+$rajdhani: 'Rajdhani';
+*/
+// -----------
+// Variables
+// -----------
+
+$defaultFontSize: 20;
+
+// Images
+//$cursor: url("../assets/img/cursor.png");
+//$background: url("../assets/img/background.png");
+
+//$switch_on: url("../assets/img/switch/on.png");
+//$switch_off: url("../assets/img/switch/off.png");
+
+// Typography
+//$sofia: 'Sofia Pro';
+
+// Colors
+$white: #FCFEFF;
+$black: #06040D;
+$blue: #00B8FF;
+$light-blue: #90F5F9;
+$light-blue: rgb(144, 245, 249);
+$red: #BF2F20;
+$light-red: #FF746D;
+$green: rgba(111, 255, 147, 1);
+
+// Transitions
+$ease: all 400ms ease-in-out;

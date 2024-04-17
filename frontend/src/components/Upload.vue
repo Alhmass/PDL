@@ -43,7 +43,7 @@ function add_tag() {
 </script>
 
 <template>
-  <div>
+  <div class="uploadContainer">
     <h3>Upload an image</h3>
     <div class="fileInput">
       <input type="file" id="file" ref="file" @change="handleFileUpload" />
@@ -61,22 +61,3 @@ function add_tag() {
     </div>
   </div>
 </template>
-
-<style scoped>
-.fileInput {
-  margin-bottom: 1em;
-}
-
-.tags {
-  margin-bottom: 1em;
-  display: flex;
-  justify-content: center;
-}
-
-.tagtextarea {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 0.5em;
-}
-</style>

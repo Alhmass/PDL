@@ -66,47 +66,33 @@ api.getImageTags(props.id)
 </script>
 
 <template>
-  <figure :id="'gallery-' + id"></figure>
-  <hr />
-  <h3>Show similar images</h3>
-  <select v-model="descriptor">
-    <option disabled value="">Select a descriptor</option>
-    <option :value="{ name: 'histogram2D' }">Histogram 2D Hue/Saturation</option>
-    <option :value="{ name: 'histogram3D' }">Histogram 3D RGB</option>
-    <option :value="{ name: 'tags' }">Tags</option>
-  </select>
-  <input type="number" id="nbImages" placeholder="Number of image to display" min="1" :max="maxImage" />
-  <select v-if="descriptor.name == 'tags' && tags.length > 1" v-model="tagSelect">
-    <option disabled value="">Select a tag</option>
-    <option v-for="tag in tags" :value="tag" :key="tag">{{ tag }}
-    </option>
-  </select>
-  <button v-if="descriptor && maxImage >= 1 && descriptor.name !== 'tags'" @click="showSimilar()">View</button>
-  <button v-else-if="descriptor.name === 'tags' && tags.length > 1" @click="showSimilar()">View</button>
-  <button v-else disabled>View</button>
-  <span v-if="maxImage < 1">No other image found on the server!</span>
-  <span v-else-if="descriptor.name === 'tags' && tags.length <= 1">This image doesn't have any tag!</span>
-  <hr />
-  <div v-if="descriptor" class="image_container">
-    <div v-for="image in imageList">
-      <Image :id="image.id" />
-      <p v-if="descriptor.name !== 'tags'" class="similar_score">score : {{ Math.round(image.similar_score) }}</p>
+  <div class="similarContainer">
+    <figure :id="'gallery-' + id"></figure>
+    <hr />
+    <h3>Show similar images</h3>
+    <select v-model="descriptor">
+      <option disabled value="">Select a descriptor</option>
+      <option :value="{ name: 'histogram2D' }">Histogram 2D Hue/Saturation</option>
+      <option :value="{ name: 'histogram3D' }">Histogram 3D RGB</option>
+      <option :value="{ name: 'tags' }">Tags</option>
+    </select>
+    <input type="number" id="nbImages" placeholder="Number of image to display" min="1" :max="maxImage" />
+    <select v-if="descriptor.name == 'tags' && tags.length > 1" v-model="tagSelect">
+      <option disabled value="">Select a tag</option>
+      <option v-for="tag in tags" :value="tag" :key="tag">{{ tag }}
+      </option>
+    </select>
+    <button v-if="descriptor && maxImage >= 1 && descriptor.name !== 'tags'" @click="showSimilar()">View</button>
+    <button v-else-if="descriptor.name === 'tags' && tags.length > 1" @click="showSimilar()">View</button>
+    <button v-else disabled>View</button>
+    <span v-if="maxImage < 1">No other image found on the server!</span>
+    <span v-else-if="descriptor.name === 'tags' && tags.length <= 1">This image doesn't have any tag!</span>
+    <hr />
+    <div v-if="descriptor" class="image_container">
+      <div v-for="image in imageList">
+        <Image :id="image.id" />
+        <p v-if="descriptor.name !== 'tags'" class="similar_score">score : {{ Math.round(image.similar_score) }}</p>
+      </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.image_container {
-  display: flex;
-  max-width: 100%;
-  justify-content: center;
-  margin: 0 auto;
-  flex-wrap: wrap;
-  padding: 0 1em;
-}
-
-.image_container:deep(figure img) {
-  width: 250px;
-  height: 250px;
-}
-</style>

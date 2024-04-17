@@ -74,50 +74,31 @@ function loadImageByTag() {
 </script>
 
 <template>
-  <div class="searchByTag">
-    <h3>Search image by tag</h3>
-    <span v-if="searchNotFound" class="searchnotfound">No image found!</span>
-    <div class="searchContainer">
-      <input v-model="searchQuery" type="search" class="searchBar" placeholder="Search..."
-        @keyup.enter="loadImageByTag()">
-      <button type="submit" class="searchBtn" @click="loadImageByTag()">search</button>
+  <div class="homeContainer">
+    <div class="searchByTag">
+      <h3>Search image by tag</h3>
+      <span v-if="searchNotFound" class="searchnotfound">No image found!</span>
+      <div class="searchContainer">
+        <input v-model="searchQuery" type="search" class="searchBar" placeholder="Search..."
+          @keyup.enter="loadImageByTag()">
+        <button type="submit" class="searchBtn" @click="loadImageByTag()">search</button>
+      </div>
+    </div>
+    <div>
+      <h3>Choose an image</h3>
+      <select v-model="selected" @change="loadImage()">
+        <option disabled value="">Select an image</option>
+        <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}
+        </option>
+      </select>
+      <button v-if="selected" @click="downloadImage()">Download</button>
+      <button v-else disabled>Télécharger</button>
+      <button v-if="selected" @click="deleteImage()">Delete</button>
+      <button v-else disabled>Supprimer</button>
+      <hr />
+    </div>
+    <div v-if="imageToDisplay" class="image_container">
+      <Image v-for="image in imageToDisplay" :key="image.id" :id="image.id" @click="utils.gotoImage(image.id)" />
     </div>
   </div>
-  <div>
-    <h3>Choose an image</h3>
-    <select v-model="selected" @change="loadImage()">
-      <option disabled value="">Select an image</option>
-      <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}
-      </option>
-    </select>
-    <button v-if="selected" @click="downloadImage()">Download</button>
-    <button v-else disabled>Télécharger</button>
-    <button v-if="selected" @click="deleteImage()">Delete</button>
-    <button v-else disabled>Supprimer</button>
-    <hr />
-  </div>
-  <div v-if="imageToDisplay" class="image_container">
-    <Image v-for="image in imageToDisplay" :key="image.id" :id="image.id" @click="utils.gotoImage(image.id)" />
-  </div>
 </template>
-
-<style scoped>
-button {
-  cursor: pointer;
-}
-
-.image_container {
-  display: flex;
-  max-width: 100%;
-  justify-content: center;
-  margin: 0 auto;
-  flex-wrap: wrap;
-  padding: 0 2em;
-}
-
-.image_container:deep(figure img) {
-  cursor: pointer;
-  width: auto;
-  max-height: 500px;
-}
-</style>

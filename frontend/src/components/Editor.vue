@@ -59,7 +59,7 @@ async function imageUploaded(newImage: File) {
 
 function parse(num: number) {
   let res = "";
-  if(num < 0) res = res.concat("-");
+  if (num < 0) res = res.concat("-");
   return res.concat(Math.abs(num).toString().padStart(3, '0'));
 }
 
@@ -69,7 +69,6 @@ function applyFilter() {
     if (selectedFilter.value === "colors") {
       const formattedNumbers = range.value.map(num => parse(num));
       numbers = formattedNumbers.join('');
-      console.log(numbers);
     } else
       numbers = range.value.join('');
     api.getImageFilter(imageToDisplay.value.id, selectedFilter.value, numbers).then((data) => {
@@ -98,113 +97,74 @@ function resetRange() {
 </script>
 
 <template>
-  <div class="imageLoading">
-    <div class="selectorContainer">
-      <h3>Choose an image</h3>
-      <select v-model="selected" @change="loadImage()">
-        <option disabled value="">Choose an image</option>
-        <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}
-        </option>
-      </select>
-    </div>
-    <h3 class="ortext">OR</h3>
-    <Upload @response="(image) => imageUploaded(image)" :showDiv="false" />
-  </div>
-  <hr />
-  <div v-if="imageToDisplay" class="editorContainer">
-    <div class="toolboxContainer">
-      <h3>Filter to apply</h3>
-      <select v-model="selectedFilter" @change="resetRange()">
-        <option disabled value="">Filter</option>
-        <option value="GrayLevel">GrayLevel</option>
-        <option value="brightness">Brightness</option>
-        <option value="mean">Mean</option>
-        <option value="colors">Colors</option>
-      </select>
-      <div v-if="selectedFilter" class="filterContainer">
-        <div v-if='selectedFilter === "colors"' class="sliderColors">
-          <div>
-            <span class="value-display" id="redValueDisplay">{{ range[0] }}</span>
-            <input v-model="range[0]" type="range" id="redRange" min="-255" max="255" value="0">
-            <label for="redRange">R</label>
-          </div>
-          <div>
-            <span class="value-display" id="greenValueDisplay">{{ range[1] }}</span>
-            <input v-model="range[1]" type="range" id="greenRange" min="-255" max="255" value="0">
-            <label for="greenRange">G</label>
-          </div>
-          <div>
-            <span class="value-display" id="blueValueDisplay">{{ range[2] }}</span>
-            <input v-model="range[2]" type="range" id="blueRange" min="-255" max="255" value="0">
-            <label for="blueRange">B</label>
-          </div>
-        </div>
-        <div v-else-if='selectedFilter === "brightness"' class="brightSlider">
-          <div>
-            <span class="value-display" id="brightValueDisplay">{{ range[0] }}</span>
-            <input v-model="range[0]" type="range" id="brightSlider" name="brightSlider" min="0" max="255" value="0" />
-            <label for="brightSlider">{{ selectedFilter }}</label>
-          </div>
-        </div>
-        <div v-else-if='selectedFilter === "mean"' class="brightSlider">
-          <div>
-            <span class="value-display" id="meanValueDisplay">{{ range[0] }}</span>
-            <input v-model="range[0]" type="range" id="meanSlider" name="meanSlider" min="1" max="21" step="2"
-              value="1" />
-            <label for="meanSlider">{{ selectedFilter }}</label>
-          </div>
-        </div>
+  <div class="filterContainer">
+    <div class="imageLoading">
+      <div class="selectorContainer">
+        <h3>Choose an image</h3>
+        <select v-model="selected" @change="loadImage()">
+          <option disabled value="">Choose an image</option>
+          <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name
+            }}
+          </option>
+        </select>
       </div>
-      <button v-if="selectedFilter" @click="applyFilter()">Apply</button>
+      <h3 class="ortext">OR</h3>
+      <Upload @response="(image) => imageUploaded(image)" :showDiv="false" />
     </div>
-    <div class="image_container">
-      <Image :key="imageToDisplay.id" :id="imageToDisplay.id" @click="utils.gotoImage(imageToDisplay.id)" />
-      <div>
-        <button @click="downloadImage()">Download</button>
+    <hr />
+    <div v-if="imageToDisplay" class="editorContainer">
+      <div class="toolboxContainer">
+        <h3>Filter to apply</h3>
+        <select v-model="selectedFilter" @change="resetRange()">
+          <option disabled value="">Filter</option>
+          <option value="GrayLevel">GrayLevel</option>
+          <option value="brightness">Brightness</option>
+          <option value="mean">Mean</option>
+          <option value="colors">Colors</option>
+        </select>
+        <div v-if="selectedFilter" class="filterContainer">
+          <div v-if='selectedFilter === "colors"' class="sliderColors">
+            <div>
+              <span class="value-display" id="redValueDisplay">{{ range[0] }}</span>
+              <input v-model="range[0]" type="range" id="redRange" min="-255" max="255" value="0">
+              <label for="redRange">R</label>
+            </div>
+            <div>
+              <span class="value-display" id="greenValueDisplay">{{ range[1] }}</span>
+              <input v-model="range[1]" type="range" id="greenRange" min="-255" max="255" value="0">
+              <label for="greenRange">G</label>
+            </div>
+            <div>
+              <span class="value-display" id="blueValueDisplay">{{ range[2] }}</span>
+              <input v-model="range[2]" type="range" id="blueRange" min="-255" max="255" value="0">
+              <label for="blueRange">B</label>
+            </div>
+          </div>
+          <div v-else-if='selectedFilter === "brightness"' class="brightSlider">
+            <div>
+              <span class="value-display" id="brightValueDisplay">{{ range[0] }}</span>
+              <input v-model="range[0]" type="range" id="brightSlider" name="brightSlider" min="0" max="255"
+                value="0" />
+              <label for="brightSlider">{{ selectedFilter }}</label>
+            </div>
+          </div>
+          <div v-else-if='selectedFilter === "mean"' class="brightSlider">
+            <div>
+              <span class="value-display" id="meanValueDisplay">{{ range[0] }}</span>
+              <input v-model="range[0]" type="range" id="meanSlider" name="meanSlider" min="1" max="21" step="2"
+                value="1" />
+              <label for="meanSlider">{{ selectedFilter }}</label>
+            </div>
+          </div>
+        </div>
+        <button v-if="selectedFilter" @click="applyFilter()">Apply</button>
+      </div>
+      <div class="image_container">
+        <Image :key="imageToDisplay.id" :id="imageToDisplay.id" @click="utils.gotoImage(imageToDisplay.id)" />
+        <div>
+          <button @click="downloadImage()">Download</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-button {
-  cursor: pointer;
-}
-
-.editorContainer {
-  display: flex;
-  justify-content: center;
-  padding: 0 2em;
-}
-
-.toolboxContainer {
-  width: 50%;
-}
-
-.sliderColors {
-  display: flex;
-  flex-direction: column;
-  padding: 0 2em;
-}
-
-.image_container {
-  display: flex;
-  width: 50%;
-  justify-content: center;
-  margin: 0 auto;
-  flex-direction: column;
-  padding: 0 2em;
-}
-
-.image_container:deep(figure img) {
-  cursor: pointer;
-  width: 100%;
-  max-height: 500px;
-}
-
-.imageLoading {
-  display: flex;
-  justify-content: center;
-  padding: 0 2em;
-}
-</style>

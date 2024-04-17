@@ -1,0 +1,202 @@
+// ------
+// MIXINS
+// ------
+
+// MEDIA QUERIES
+@mixin media($point) {
+
+    // Breakpoints
+    $desktop: "only screen and (max-width: 1324px)";
+    $desktopPetit: "only screen and (max-width: 1210px)";
+    $tablette: "only screen and (max-width: 1024px)";
+    $mobileMenu: "only screen and (max-width: 930px)";
+    $mobile: "only screen and (max-width: 768px)";
+    $mobilePetit: "only screen and (max-width: 480px)";
+
+    // Breakpoint Header - Menu
+    $bpHeader: "only screen and (max-width: 1270px)";
+
+
+    @if $point ==desktop {
+        @media #{$desktop} {
+            @content;
+        }
+    }
+
+    @else if $point ==desktopPetit {
+        @media #{$desktopPetit} {
+            @content;
+        }
+    }
+
+    @else if $point ==tablette {
+        @media #{$tablette} {
+            @content;
+        }
+    }
+
+    @else if $point ==mobile {
+        @media #{$mobile} {
+            @content;
+        }
+    }
+
+    @else if $point ==mobileMenu {
+        @media #{$mobileMenu} {
+            @content;
+        }
+    }
+
+    @else if $point ==mobilePetit {
+        @media #{$mobilePetit} {
+            @content;
+        }
+    }
+
+
+    // Breakpoint Header - Menu
+    @else if $point ==bpHeader {
+        @media #{$bpHeader} {
+            @content;
+        }
+    }
+
+    // @include media(tablette){ // -- MEDIA
+
+    // }
+    // @include media(tablette){
+    //     font-size: size();
+    // }
+    // @include media(mobileMenu){
+    //     font-size: size();
+    // }
+
+}
+
+// FONTS
+@mixin setFont($weight: '', $size: '', $family: '') {
+
+    @if $weight !='' {
+        font-weight: $weight;
+    }
+
+    @if $size !='' {
+        font-size: $size;
+    }
+
+    @if $family !='' {
+        font-family: $family;
+    }
+
+}
+
+// WRAPPER
+@mixin setWrapper($size: 1, $sizeOnly: '') {
+
+    @if $sizeOnly !='' {
+        width: $size;
+    }
+
+    @else {
+        @if $size ==1 {
+            width: 100%;
+        }
+
+        @else if $size ==2 {
+            width: $site-size;
+        }
+
+        @else if $size ==3 {
+            width: $site-size-large;
+        }
+
+        @else {
+            width: $size;
+        }
+
+        @if $size !=1 {
+            display: block;
+            margin-right: auto;
+            margin-left: auto;
+        }
+    }
+
+}
+
+// BACKGROUND
+@mixin background ($size: cover, $position: center, $repeat: no-repeat) {
+    background: {
+        size: $size;
+        position: $position;
+        repeat: $repeat;
+    }
+}
+
+// GRADIENT
+@mixin gradient ($gradient) {
+    &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        content: '';
+        height: 100%;
+        width: 100%;
+        background: $gradient;
+    }
+}
+
+// ANIMATION
+@mixin transition() {
+    transition: 0.4s all ease;
+}
+
+// FONT SIZE EM
+@function size($value) {
+    @return ($value / $defaultFontSize) * 1em;
+}
+
+
+// Link Color
+@mixin linkColor($color: '', $hover: '', $elemInCible: '') {
+
+
+    @if $elemInCible !='' {
+        #{$elemInCible} {
+            transition-duration: 0.5s;
+            transition-timing-function: 'linear';
+            transition-property: color;
+            transition-property: background-color;
+
+            @if $color !='' {
+                color: $color;
+            }
+        }
+
+        @if $hover !='' {
+            &:hover {
+                #{$elemInCible} {
+                    color: $hover;
+                }
+            }
+        }
+    }
+
+    @else {
+        transition-duration: 0.5s;
+        transition-timing-function: 'linear';
+        transition-property: color;
+        transition-property: background-color;
+
+        @if $color !='' {
+            color: $color;
+        }
+
+        @if $hover !='' {
+            &:hover {
+                color: $hover;
+            }
+        }
+    }
+
+}
