@@ -56,8 +56,8 @@ public class Filtres {
         BufferedImage output = UtilImageIO.loadImage(imagePath);
         Planar<GrayU8> imageOutput = ConvertBufferedImage.convertFromPlanar(output, null, true, GrayU8.class);
 
-        for (int y = 0; y < imageOutput.width; y++) {
-            for (int x = 0; x < imageOutput.height; x++) {
+        for (int y = 0; y < imageOutput.height; y++) {
+            for (int x = 0; x < imageOutput.width; x++) {
                 int colorR = imageOutput.getBand(0).get(x, y);
                 int colorG = imageOutput.getBand(1).get(x, y);
                 int colorB = imageOutput.getBand(2).get(x, y);
@@ -114,8 +114,8 @@ public class Filtres {
         BufferedImage output = UtilImageIO.loadImage(imagePath);
         Planar<GrayU8> imageOutput = ConvertBufferedImage.convertFromPlanar(output, null, true, GrayU8.class);
 
-        for (int y = 0; y < imageOutput.width; y++) {
-            for (int x = 0; x < imageOutput.height; x++) {
+        for (int y = 0; y < imageOutput.height; y++) {
+            for (int x = 0; x < imageOutput.width; x++) {
                 int colorR = imageOutput.getBand(0).get(x, y);
                 int colorG = imageOutput.getBand(1).get(x, y);
                 int colorB = imageOutput.getBand(2).get(x, y);
