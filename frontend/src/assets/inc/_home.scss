@@ -25,6 +25,10 @@
                 height: 2rem;
                 padding: 0.5rem 1rem;
                 border-radius: 0.25em 0 0 0.25em;
+
+                &::-webkit-search-cancel-button, &::-webkit-search-results-button, &::-webkit-search-results-decoration, &::-webkit-search-results-button, &::-webkit-search-decoration {
+                    display: none;
+                }
             }
 
             #searchBtn {
