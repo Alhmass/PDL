@@ -50,9 +50,10 @@ body {
             width: 12rem;
             padding: 0.5rem 4rem 0.5rem 1rem;
             margin: auto 1rem;
+
             background: url("../white_arrow.svg") no-repeat right 0.8em center / 1.4em,
-                linear-gradient(to left, rgba(255, 255, 255, 0.3) 3em, rgba(255, 255, 255, 0.2) 3em);
-            color: #FFFF;
+                $light-brown;
+            color: $light-gray;
             border-radius: 0.25em;
             box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
             cursor: pointer;
