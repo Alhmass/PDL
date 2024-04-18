@@ -1,9 +1,12 @@
 .homeContainer {
-    display: grid;
-    justify-content: center;
 
     button {
         cursor: pointer;
+    }
+
+    .imageSection {
+        display: grid;
+        justify-content: center;
     }
 
     .selectImgContainer {

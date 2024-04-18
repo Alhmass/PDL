@@ -159,7 +159,7 @@ function resetRange() {
         </div>
         <button v-if="selectedFilter" @click="applyFilter()">Apply</button>
       </div>
-      <div class="image_containers">
+      <div class="image_container">
         <Image :key="imageToDisplay.id" :id="imageToDisplay.id" @click="utils.gotoImage(imageToDisplay.id)" />
         <div>
           <button @click="downloadImage()">Download</button>
