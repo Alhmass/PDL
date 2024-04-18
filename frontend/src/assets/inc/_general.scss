@@ -4,7 +4,7 @@ body {
     font-family: $sofia;
 
     #app {
-        height: calc(100vh - 120px);
+        min-height: 100vh;
         box-sizing: border-box;
         padding-top: 60px;
         padding-bottom: 60px;

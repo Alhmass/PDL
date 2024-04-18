@@ -26,6 +26,7 @@ function showSimilar() {
   api.getImageListSimilar(props.id, descriptor.value.name, nbImages, tagSelect?.value)
     .then((data) => {
       imageList.value = data;
+      document.querySelectorAll(".tagsContainer").forEach(el => el.remove());
     })
     .catch(e => {
       console.log(e.message);
