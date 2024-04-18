@@ -78,8 +78,7 @@ function toggleBurgerMenu() {
   <footer>
     <div class="footer-container">
       <div class="footer-element">
-        <p>Contributeurs : <a href="/">Sanson Marie</a> | <a href="/">Lumet Hugo</a> | <a
-            href="https://github.com/AlexLoup33" target="_blank">Lou-Poueyou Alexandre</a></p>
+        <p>Contributeurs : Sanson Marie | Lumet Hugo | Lou-Poueyou Alexandre</p>
         <p><a href="https://gitlab.emi.u-bordeaux.fr/pdl-l3/teams/2024/l1/l1e">Code source</a> - © PDL L1E - 2024</p>
       </div>
     </div>
