@@ -7,6 +7,7 @@ const emit = defineEmits(['response']);
 const tags = ref<string[]>([]);
 const props = defineProps({ showDiv: { type: Boolean, default: true } });
 const inputTagVal = ref("");
+
 function submitFile() {
   if (target.value !== null && target.value !== undefined && target.value.files !== null) {
     const file = target.value.files[0];
