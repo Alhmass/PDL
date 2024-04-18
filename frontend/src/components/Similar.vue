@@ -33,10 +33,10 @@ function showSimilar() {
 }
 
 function inc() {
-  if(nbInput.value < maxImage.value) nbInput.value += 1;
+  if (nbInput.value < maxImage.value) nbInput.value += 1;
 }
 function dec() {
-  if(nbInput.value > 1) nbInput.value -= 1;
+  if (nbInput.value > 1) nbInput.value -= 1;
 }
 
 api.getImage(props.id)
@@ -103,7 +103,9 @@ function delete_tag(tagToRemove: string) {
 </script>
 
 <template>
-  <figure :id="'gallery-' + id"></figure>
+  <div class="imageSimiContainer">
+    <figure :id="'gallery-' + id"></figure>
+  </div>
   <hr />
   <div class="similarContainer">
     <h3>Show similar images</h3>
@@ -116,7 +118,7 @@ function delete_tag(tagToRemove: string) {
       </select>
       <div class="inputContainer">
         <span class="decrement" @click="dec()">-</span>
-        <input  v-model="nbInput" type="number" id="nbImages" min="1" :max="maxImage" />
+        <input v-model="nbInput" type="number" id="nbImages" min="1" :max="maxImage" />
         <span class="increment" @click="inc()">+</span>
       </div>
       <select v-if="descriptor.name == 'tags' && tags.length > 1" v-model="tagSelect">
@@ -131,7 +133,7 @@ function delete_tag(tagToRemove: string) {
       <span v-else-if="descriptor.name === 'tags' && tags.length <= 1">This image doesn't have any tag!</span>
     </div>
     <hr />
-    <div v-if="descriptor" class="image_container">
+    <div v-if="descriptor" class="image_containers">
       <div v-for="image in imageList">
         <Image :id="image.id" />
         <p v-if="descriptor.name !== 'tags'" class="similar_score">score : {{ Math.round(image.similar_score) }}</p>

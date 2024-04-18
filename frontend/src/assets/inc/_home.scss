@@ -1,4 +1,7 @@
 .homeContainer {
+    display: grid;
+    justify-content: center;
+
     button {
         cursor: pointer;
     }
@@ -50,21 +53,6 @@
                     color: $light-gray;
                 }
             }
-        }
-    }
-
-    .image_container {
-        display: flex;
-        max-width: 100%;
-        justify-content: center;
-        margin: 0 auto;
-        flex-wrap: wrap;
-        padding: 0 2em;
-
-        figure img {
-            cursor: pointer;
-            width: auto;
-            max-height: 500px;
         }
     }
 }

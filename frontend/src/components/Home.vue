@@ -66,6 +66,7 @@ function loadImageByTag() {
       }
       selected.value.id = -1;
       selected.value.name = '';
+      searchQuery.value = "";
     }).catch(e => {
       console.log(e.message);
     })
@@ -82,7 +83,8 @@ function loadImageByTag() {
         <div class="searchContainer">
           <input v-model="searchQuery" type="search" class="searchBar" placeholder="Search..."
             @keyup.enter="loadImageByTag()">
-          <button type="submit" id="searchBtn" @click="loadImageByTag()"><img src="../assets/icons8-loupe.svg"/></button>
+          <button type="submit" id="searchBtn" @click="loadImageByTag()"><img
+              src="../assets/icons8-loupe.svg" /></button>
         </div>
       </div>
       <h3 class="ortext">OR</h3>
@@ -90,7 +92,8 @@ function loadImageByTag() {
         <h3>Choose an image</h3>
         <select v-model="selected" @change="loadImage()">
           <option disabled value="">Select an image</option>
-          <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name }}
+          <option v-for="image in imageList" :value="{ id: image.id, name: image.name }" :key="image.id">{{ image.name
+            }}
           </option>
         </select>
         <button v-if="selected" @click="downloadImage()">Download</button>
