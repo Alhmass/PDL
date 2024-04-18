@@ -85,6 +85,30 @@ body {
             border-radius: 0.25em;
         }
 
+        .tagList {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .tag{
+                border-radius: 3rem;
+                background-color: $light-brown;
+                padding: 0.5rem 1rem;
+                margin: 0.5rem 1rem;
+
+                .tagText {
+                    color: $light-gray;
+                    font-size: size(10);
+                }
+
+                .deleteIcon {
+                    color: $red;
+                    padding: 0 0 0 1rem;
+                    cursor: pointer;
+                }
+            }
+        }
+
         .ortext {
             transform: translateY(10px);
         }
