@@ -13,21 +13,47 @@
         }
     }
 
-    input[type="number"] {
-        -webkit-appearance: none;
-        appearance: none;
-        border: 0;
-        outline: 0;
-        background-color: $light-brown;
-        color: $black;
-        width: 12rem;
-        padding: 0.5rem 1rem;
-        margin: auto 1rem;
-        border-radius: 0.25em;
+    .ParamSelectors {
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-        &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
-            color: $black;
-            background-color: inherit;
+        .inputContainer {
+            display: flex;
+            justify-content: center;
+            margin: 1em;
+    
+            #nbImages {
+                border: 0;
+                outline: 0;
+                background-color: $light-brown;
+                color: $black;
+                width: 3rem;
+                padding: 0.5rem 1rem;
+        
+                -moz-appearance: textfield;
+                appearance: textfield;
+        
+                &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+            }
+        
+            .decrement, .increment {
+                background-color: $light-brown;
+                color: $black;
+                width: 2rem;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+            }
+        
+            .decrement {
+                border-radius: 0.25em 0 0 0.25em;
+            }
+            .increment {
+                border-radius: 0 0.25em 0.25em 0;
+            }
         }
     }
 }

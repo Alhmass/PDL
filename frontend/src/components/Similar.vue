@@ -10,6 +10,7 @@ const props = defineProps<{ id: number }>()
 
 const imageList = ref<ImageSimilarType[]>([]);
 const tags = ref<string[]>([]);
+const nbInput = ref(1);
 
 const maxImage = ref(0);
 
@@ -27,6 +28,13 @@ function showSimilar() {
     .catch(e => {
       console.log(e.message);
     });
+}
+
+function inc() {
+  if(nbInput.value < maxImage.value) nbInput.value += 1;
+}
+function dec() {
+  if(nbInput.value > 1) nbInput.value -= 1;
 }
 
 api.getImage(props.id)
@@ -70,23 +78,29 @@ api.getImageTags(props.id)
     <figure :id="'gallery-' + id"></figure>
     <hr />
     <h3>Show similar images</h3>
-    <select v-model="descriptor">
-      <option disabled value="">Select a descriptor</option>
-      <option :value="{ name: 'histogram2D' }">Histogram 2D Hue/Saturation</option>
-      <option :value="{ name: 'histogram3D' }">Histogram 3D RGB</option>
-      <option :value="{ name: 'tags' }">Tags</option>
-    </select>
-    <input type="number" id="nbImages" placeholder="Number of image to display" min="1" :max="maxImage" />
-    <select v-if="descriptor.name == 'tags' && tags.length > 1" v-model="tagSelect">
-      <option disabled value="">Select a tag</option>
-      <option v-for="tag in tags" :value="tag" :key="tag">{{ tag }}
-      </option>
-    </select>
-    <button v-if="descriptor && maxImage >= 1 && descriptor.name !== 'tags'" @click="showSimilar()">View</button>
-    <button v-else-if="descriptor.name === 'tags' && tags.length > 1" @click="showSimilar()">View</button>
-    <button v-else disabled>View</button>
-    <span v-if="maxImage < 1">No other image found on the server!</span>
-    <span v-else-if="descriptor.name === 'tags' && tags.length <= 1">This image doesn't have any tag!</span>
+    <div class="ParamSelectors">
+      <select v-model="descriptor">
+        <option disabled value="">Select a descriptor</option>
+        <option :value="{ name: 'histogram2D' }">Histogram 2D Hue/Saturation</option>
+        <option :value="{ name: 'histogram3D' }">Histogram 3D RGB</option>
+        <option :value="{ name: 'tags' }">Tags</option>
+      </select>
+      <div class="inputContainer">
+        <span class="decrement" @click="dec()">-</span>
+        <input  v-model="nbInput" type="number" id="nbImages" placeholder="Number of image to display" min="1" :max="maxImage" />
+        <span class="increment" @click="inc()">+</span>
+      </div>
+      <select v-if="descriptor.name == 'tags' && tags.length > 1" v-model="tagSelect">
+        <option disabled value="">Select a tag</option>
+        <option v-for="tag in tags" :value="tag" :key="tag">{{ tag }}
+        </option>
+      </select>
+      <button v-if="descriptor && maxImage >= 1 && descriptor.name !== 'tags'" @click="showSimilar()">View</button>
+      <button v-else-if="descriptor.name === 'tags' && tags.length > 1" @click="showSimilar()">View</button>
+      <button v-else disabled>View</button>
+      <span v-if="maxImage < 1">No other image found on the server!</span>
+      <span v-else-if="descriptor.name === 'tags' && tags.length <= 1">This image doesn't have any tag!</span>
+    </div>
     <hr />
     <div v-if="descriptor" class="image_container">
       <div v-for="image in imageList">
