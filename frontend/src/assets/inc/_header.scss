@@ -1,5 +1,5 @@
 .header{
-    background: linear-gradient(to bottom, $psy-light-purple, $psy-dark-purple);
+    background: linear-gradient(to bottom, $light-brown, $dark-brown);
     margin-bottom: 3em;
 
     ul {
@@ -13,7 +13,7 @@
 
             a {
                 display: block;
-                color: $psy-orange;
+                color: $black;
                 text-align: center;
                 padding: 14px 16px;
                 text-decoration: none;
@@ -32,7 +32,7 @@
         width: 100%;
         height: 100vh;
         right: 0;
-        background-color: $psy-dark-purple;
+        background-color: $light-brown;
 
         ul {
             list-style: none;
@@ -42,7 +42,7 @@
         ul li {
             padding: 10px;
             a {
-                color: $psy-orange;
+                color: $black;  
                 text-align: center;
                 padding: 14px 16px;
                 text-decoration: none;
