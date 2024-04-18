@@ -39,6 +39,8 @@
                 text-transform: capitalize;
                 cursor: pointer;
 
+                content:"Browse...";
+
                 &:hover {
                     background-color: $light-brown;
                 }
