@@ -15,4 +15,37 @@
             margin-right: 0.5em;
         }
     }
+
+    .fileInputContainer {
+        #file {
+            appearance: none;
+            border: 0;
+            outline: 0;
+
+            &::file-selector-button {
+                background-color: $dark-brown;
+                color: $light-gray;
+                transition: background-color 0.62s ease;
+                box-sizing: border-box;
+                border: none;
+                margin: 0.5em;
+                border-radius: 0.8em;
+                text-align: center;
+                width: 6em;
+                height: 2.5em;
+                font-weight: 600;
+                font-size: size(12);
+                text-transform: capitalize;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: $light-brown;
+                }
+    
+                &:active {
+                    background-color: $green;
+                }
+            }
+        }
+    }
 }

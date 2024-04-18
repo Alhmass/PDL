@@ -19,6 +19,7 @@ body {
 
         button {
             background: $dark-brown;
+            color: $light-gray;
             transition: background-color 0.62s ease;
             box-sizing: border-box;
             border: none;
@@ -38,8 +39,6 @@ body {
             &:active {
                 background-color: $green;
             }
-
-            color: $light-gray;
         }
 
         select {
