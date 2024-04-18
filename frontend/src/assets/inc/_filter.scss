@@ -1,10 +1,21 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
 .filterContainer {
     button {
         cursor: pointer;
     }
 
     .editorContainer {
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
         justify-content: center;
         padding: 0 2em;
 
@@ -12,19 +23,31 @@
             width: 50%;
         }
 
-        .sliderColors, .brightSlider, .meanSlider {
+        .sliderColors,
+        .brightSlider,
+        .meanSlider {
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
             flex-direction: column;
             padding: 0 2em;
         }
 
         .sliderContainer {
+            display: -webkit-box;
+            display: -ms-flexbox;
             display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
             align-items: center;
             margin: 0 auto;
         }
-    
-        .value-display, .slider-descr {
+
+        .value-display,
+        .slider-descr {
             min-width: 50px;
         }
     }
@@ -34,11 +57,12 @@
         height: 2px;
         background: $light-brown;
         margin: 15px 5px;
-        -webkit-appearance:none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
         appearance: none;
-        
-        &::-moz-range-thumb, &::-webkit-slider-thumb {
-            -webkit-appearance: none !important;
+
+        &::-moz-range-thumb {
+            -moz-appearance: none !important;
             width: 20px;
             height: 20px;
             background-color: $beige;
@@ -47,17 +71,54 @@
             cursor: pointer;
         }
 
-        &::-moz-range-progress {
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none !important;
+            width: 25px;
+            height: 25px;
+            transform: translateY(-10px);
+            background-color: $beige;
+            border: 2px solid $dark-brown;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        &::-ms-thumb {
+            width: 20px;
+            height: 20px;
+            background-color: $beige;
+            border: 2px solid $dark-brown;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        &::-webkit-slider-runnable-track {
+            background-color: $dark-brown;
+            height: 2px;
+        }
+
+        &::-moz-range-track {
+            background-color: $dark-brown;
+            height: 2px;
+        }
+
+        &::-ms-track {
             background-color: $dark-brown;
             height: 2px;
         }
     }
 
     .image_container {
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
         width: 50%;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
         justify-content: center;
         margin: 0 auto;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
         flex-direction: column;
         padding: 0 2em;
 
@@ -69,7 +130,11 @@
     }
 
     .imageLoading {
+        display: -webkit-box;
+        display: -ms-flexbox;
         display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
         justify-content: center;
         padding: 0 2em;
     }
