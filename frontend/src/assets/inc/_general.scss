@@ -93,7 +93,7 @@ body {
             width: 50%;
             margin: 0 auto;
 
-            .tag{
+            .tag {
                 border-radius: 3rem;
                 background-color: $light-brown;
                 padding: 0.5rem 1rem;
@@ -114,6 +114,10 @@ body {
 
         .ortext {
             transform: translateY(10px);
+
+            @include media(mobile) {
+                transform: none;
+            }
         }
 
         .image_container {
