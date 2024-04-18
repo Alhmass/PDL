@@ -119,7 +119,8 @@ public class ImageController {
   public List<String> getImageTags(@PathVariable("id") long id) {
     List<String> list = new ArrayList<>();
     for (String item : this.sqlController.getTags(id)) {
-      list.add(item);
+      if (!item.equals(""))
+        list.add(item);
     }
     return list;
   }
