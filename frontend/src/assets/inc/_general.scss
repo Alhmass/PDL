@@ -14,7 +14,7 @@ body {
         }
     
         hr {
-            color: $black;
+            border-color: $black;
         }
 
         button{
@@ -59,18 +59,6 @@ body {
             /* <option> colors */
             /*option {
             }*/
-        }
-    
-        input {
-            appearance: none;
-            border: 0;
-            outline: 0;
-            background-color: $light-brown;
-            color: $black;
-            width: 12rem;
-            padding: 0.5rem 1rem;
-            margin: auto 1rem;
-            border-radius: 0.25em;
         }
     }
 }
