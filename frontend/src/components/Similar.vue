@@ -87,7 +87,7 @@ api.getImageTags(props.id)
       </select>
       <div class="inputContainer">
         <span class="decrement" @click="dec()">-</span>
-        <input  v-model="nbInput" type="number" id="nbImages" placeholder="Number of image to display" min="1" :max="maxImage" />
+        <input  v-model="nbInput" type="number" id="nbImages" min="1" :max="maxImage" />
         <span class="increment" @click="inc()">+</span>
       </div>
       <select v-if="descriptor.name == 'tags' && tags.length > 1" v-model="tagSelect">

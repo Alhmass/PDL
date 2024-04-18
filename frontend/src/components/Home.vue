@@ -82,7 +82,7 @@ function loadImageByTag() {
         <div class="searchContainer">
           <input v-model="searchQuery" type="search" class="searchBar" placeholder="Search..."
             @keyup.enter="loadImageByTag()">
-          <button type="submit" class="searchBtn" @click="loadImageByTag()">search</button>
+          <button type="submit" id="searchBtn" @click="loadImageByTag()"><img src="../assets/icons8-loupe.svg"/></button>
         </div>
       </div>
       <h3 class="ortext">OR</h3>
