@@ -154,7 +154,7 @@ $defaultFontSize: 14;
 
 // FONT SIZE EM
 @function size($value) {
-    @return ($value / $defaultFontSize) * 1em;
+    @return (calc($value / $defaultFontSize)) * 1em;
 }
 
 
