@@ -72,7 +72,10 @@
                 text-decoration: none;
             }
         }
+    }
 
+    .burger-nav.active {
+        display: block !important;
     }
 
     .burger-icon {

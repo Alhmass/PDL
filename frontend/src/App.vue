@@ -1,14 +1,12 @@
 <script setup lang="ts">
 
-  function toggleBurgerMenu() {
-    //switch the value of display in class burger-nav
-    const burgerNav = document.querySelector('.burger-nav');
-    if (burgerNav.style.display === 'block') {
-      burgerNav.style.display = 'none';
-    } else {
-      burgerNav.style.display = 'block';
-    }
+function toggleBurgerMenu() {
+  //switch the value of display in class burger-nav
+  const burgerNav = document.querySelector('.burger-nav');
+  if (burgerNav) {
+    burgerNav.classList.toggle('active');
   }
+}
 </script>
 
 <template>
@@ -33,7 +31,7 @@
     <div class="burger-menu">
       <div class="burger-icon" @click="toggleBurgerMenu()">
         <label for="checkbox">
-          <input type="checkbox" id="check"/>
+          <input type="checkbox" id="check" />
           <span></span>
           <span></span>
           <span></span>
