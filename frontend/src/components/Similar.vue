@@ -142,6 +142,7 @@ function delete_tag(tagToRemove: string) {
     </div>
   </div>
   <div class="tagsContainer">
+    <h3>Edit tags of the image!</h3>
     <ul class="tagList" v-if="tags">
       <li class="tag" v-for="tag in tags">
         <span class="tagText">{{ tag }}</span>
