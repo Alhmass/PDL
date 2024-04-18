@@ -13,6 +13,8 @@ const tags = ref<string[]>([]);
 
 const maxImage = ref(0);
 
+const inputTagVal = ref('');
+
 interface SelectedDescr {
   name: string;
 }
@@ -56,6 +58,8 @@ api.getImageList()
     console.log(e.message);
   });
 
+
+
 api.getImageTags(props.id)
   .then((data) => {
     tags.value = data;
@@ -63,12 +67,37 @@ api.getImageTags(props.id)
   .catch(e => {
     console.log(e.message);
   })
+
+function modifyTags() {
+  let formData = new FormData();
+  formData.append("tags", tags.value.join('@'));
+  inputTagVal.value = "";
+  api.editTags(props.id, formData)
+    .then((data) => {
+    })
+    .catch(e => {
+      console.log(e.message);
+    })
+}
+
+function add_tag() {
+  if (inputTagVal.value.length !== 0) {
+    if (!tags.value.includes(inputTagVal.value)) {
+      tags.value.push(inputTagVal.value);
+      modifyTags();
+    }
+  }
+}
+function delete_tag(tagToRemove: string) {
+  tags.value = tags.value.filter((element) => element !== tagToRemove);
+  modifyTags();
+}
 </script>
 
 <template>
+  <figure :id="'gallery-' + id"></figure>
+  <hr />
   <div class="similarContainer">
-    <figure :id="'gallery-' + id"></figure>
-    <hr />
     <h3>Show similar images</h3>
     <select v-model="descriptor">
       <option disabled value="">Select a descriptor</option>
@@ -94,5 +123,15 @@ api.getImageTags(props.id)
         <p v-if="descriptor.name !== 'tags'" class="similar_score">score : {{ Math.round(image.similar_score) }}</p>
       </div>
     </div>
+  </div>
+  <div class="tagsContainer">
+    <ul class="tagList" v-if="tags">
+      <li class="tag" v-for="tag in tags">
+        <span class="tagText">{{ tag }}</span>
+        <span class="deleteIcon" @click="delete_tag(tag)">&times;</span>
+      </li>
+    </ul>
+    <input v-model="inputTagVal" type="text" class="taginput" @keyup.enter="add_tag()">
+    <button @click="add_tag()">modify</button>
   </div>
 </template>
