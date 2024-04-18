@@ -128,10 +128,10 @@ function delete_tag(tagToRemove: string) {
         </option>
       </select>
       <button v-if="descriptor && maxImage >= 1 && descriptor.name !== 'tags'" @click="showSimilar()">View</button>
-      <button v-else-if="descriptor.name === 'tags' && tags.length > 1" @click="showSimilar()">View</button>
+      <button v-else-if="descriptor.name === 'tags' && tags.length > 0" @click="showSimilar()">View</button>
       <button v-else disabled>View</button>
       <span v-if="maxImage < 1">No other image found on the server!</span>
-      <span v-else-if="descriptor.name === 'tags' && tags.length <= 1">This image doesn't have any tag!</span>
+      <span v-else-if="descriptor.name === 'tags' && tags.length < 1">This image doesn't have any tag!</span>
     </div>
     <hr />
     <div v-if="descriptor" class="image_containers">
