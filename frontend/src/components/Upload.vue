@@ -47,24 +47,26 @@ function delete_tag(tagToRemove: string) {
 <template>
   <div class="uploadContainer">
     <h3>Upload an image</h3>
-    <div class="fileInputContainer">
-      <input type="file" id="file" ref="file" @change="handleFileUpload" />
-    </div>
-    <div>
-      <div v-if="target?.value && props.showDiv" class="tags">
-        <div class="tagsContainer">
-          <ul class="tagList" v-if="tags">
-            <li class="tag" v-for="tag in tags">
-              <span class="tagText">{{ tag }}</span>
-              <span class="deleteIcon" @click="delete_tag(tag)">&times;</span>
-            </li>
-          </ul>
-          <input v-model="inputTagVal" type="text" class="taginput" @keyup.enter="add_tag()">
-          <button @click="add_tag()">modify</button>
-        </div>
+    <div class="inputContainer">
+      <div class="fileInputContainer">
+        <input type="file" id="file" ref="file" @change="handleFileUpload" />
       </div>
-      <button v-if="target?.value" @click="submitFile">Submit</button>
-      <button v-else disabled>Submit</button>
+      <div>
+        <div v-if="target?.value && props.showDiv" class="tags">
+          <div class="tagsContainer">
+            <ul class="tagList" v-if="tags">
+              <li class="tag" v-for="tag in tags">
+                <span class="tagText">{{ tag }}</span>
+                <span class="deleteIcon" @click="delete_tag(tag)">&times;</span>
+              </li>
+            </ul>
+            <input v-model="inputTagVal" type="text" class="taginput" @keyup.enter="add_tag()">
+            <button @click="add_tag()">modify</button>
+          </div>
+        </div>
+        <button v-if="target?.value" @click="submitFile">Submit</button>
+        <button v-else disabled>Submit</button>
+      </div>
     </div>
   </div>
 </template>
