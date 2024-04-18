@@ -32,7 +32,7 @@
     input[type="range"] {
         width: 200px;
         height: 2px;
-        background: $yellow;
+        background: $light-brown;
         margin: 15px 5px;
         -webkit-appearance:none !important;
         appearance: none;
@@ -41,14 +41,14 @@
             -webkit-appearance: none !important;
             width: 20px;
             height: 20px;
-            background-color: $psy_dark_purple;
-            border: 2px solid $psy_orange;
+            background-color: $beige;
+            border: 2px solid $dark-brown;
             border-radius: 50%;
             cursor: pointer;
         }
 
         &::-moz-range-progress {
-            background-color: $psy_orange;
+            background-color: $dark-brown;
             height: 2px;
         }
     }

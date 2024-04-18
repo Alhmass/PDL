@@ -1,60 +1,76 @@
-#app {
-    text-align: center;
-    font-family: $sofia;
-    color: $orange;
-
-    .error {
-        color: red;
-        font-weight: bold;
-        list-style-type: none;
-        margin-top: 1em;
-    }
-
-    button{
-        background: $psy-orange;
-        transition: background-color 0.62s ease;
-        box-sizing: border-box;
-        border: none;
-        margin: 0.5em;
-        border-radius: 0.8em;
-        text-align: center;
-        width: 6em;
-        height: 2.5em;
-
-        &:hover{
-            background-color: $psy-yellow;
-        }
-        color: $psy-dark-purple;
-    }
-
-    select {
-        appearance: none;
-        border: 0;
-        outline: 0;
-        /* Personalize */
-        width: 12rem;
-        padding: 0.5rem 4rem 0.5rem 1rem;
-        margin: auto 1rem;
-        background: url("../white_arrow.svg") no-repeat right 0.8em center / 1.4em,
-            linear-gradient(to left, rgba(255, 255, 255, 0.3) 3em, rgba(255, 255, 255, 0.2) 3em);
-        color: white;
-        border-radius: 0.25em;
-        box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        /* Remove IE arrow */
-        &::-ms-expand {
-            display: none;
-        }
-        /* Remove focus outline */
-        &:focus {
-            outline: none;
-        }
-        /* <option> colors */
-        /*option {
-        }*/
-    }
-}
-
 body {
-    background-color: $psy-dark-purple;
+    background-color: $beige;
+    color: $black;
+    font-family: $sofia;
+
+    #app {
+        text-align: center;
+    
+        .error {
+            color: red;
+            font-weight: bold;
+            list-style-type: none;
+            margin-top: 1em;
+        }
+    
+        hr {
+            color: $black;
+        }
+
+        button{
+            background: $black;
+            transition: background-color 0.62s ease;
+            box-sizing: border-box;
+            border: none;
+            margin: 0.5em;
+            border-radius: 0.8em;
+            text-align: center;
+            width: 6em;
+            height: 2.5em;
+    
+            &:hover{
+                background-color: $dark-brown;
+            }
+            color: $beige;
+        }
+    
+        select {
+            appearance: none;
+            border: 0;
+            outline: 0;
+            /* Personalize */
+            width: 12rem;
+            padding: 0.5rem 4rem 0.5rem 1rem;
+            margin: auto 1rem;
+            background: url("../white_arrow.svg") no-repeat right 0.8em center / 1.4em,
+                linear-gradient(to left, rgba(255, 255, 255, 0.3) 3em, rgba(255, 255, 255, 0.2) 3em);
+            color: white;
+            border-radius: 0.25em;
+            box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            /* Remove IE arrow */
+            &::-ms-expand {
+                display: none;
+            }
+            /* Remove focus outline */
+            &:focus {
+                outline: none;
+            }
+            /* <option> colors */
+            /*option {
+            }*/
+        }
+    
+        input {
+            appearance: none;
+            border: 0;
+            outline: 0;
+            background-color: $light-brown;
+            color: $black;
+            width: 12rem;
+            padding: 0.5rem 1rem;
+            margin: auto 1rem;
+            border-radius: 0.25em;
+        }
+    }
 }
