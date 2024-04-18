@@ -9,24 +9,24 @@ function toggleBurgerMenu() {
 }
 
 //Check the value of the rooter-link and display the appropriate footer
-function footerResponsivePosition(){
-  const footer = document.querySelector('footer');
-  if (footer) {
-    //Look at rooter-link value by checking the URL
-    if (window.location.href.includes('upload') || window.location.href.includes('editor')) {
-      footer.style.position = 'absolute';
-    } else {
-      footer.style.position = 'fixed';
-    }
+// function footerResponsivePosition() {
+//   const footer = document.querySelector('footer');
+//   if (footer) {
+//     //Look at rooter-link value by checking the URL
+//     if (window.location.href.includes('upload') || window.location.href.includes('editor')) {
+//       footer.style.position = 'absolute';
+//     } else {
+//       footer.style.position = 'fixed';
+//     }
 
-  }
-}
+//   }
+// }
 
-setInterval(footerResponsivePosition, 1000);
+//setInterval(footerResponsivePosition, 1000);
 </script>
 
 <template>
-  <div id="app">
+  <header>
     <nav class="header">
       <ul>
         <li>
@@ -43,16 +43,15 @@ setInterval(footerResponsivePosition, 1000);
         </li>
       </ul>
     </nav>
-
+    <div class="burger-icon" @click="toggleBurgerMenu()">
+      <label for="checkbox">
+        <input type="checkbox" id="check" />
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+    </div>
     <div class="burger-menu">
-      <div class="burger-icon" @click="toggleBurgerMenu()">
-        <label for="checkbox">
-          <input type="checkbox" id="check" />
-          <span></span>
-          <span></span>
-          <span></span>
-        </label>
-      </div>
       <div class="burger-nav">
         <ul>
           <li>
@@ -70,18 +69,19 @@ setInterval(footerResponsivePosition, 1000);
         </ul>
       </div>
     </div>
+  </header>
+  <div id="app">
     <div>
       <router-view />
     </div>
   </div>
-  <div class="spacer"></div>
-
-<footer>
-  <div class="footer-container">
-    <div class="footer-element">
-        <p>Contributeurs : <a href="/">Sanson Marie</a> | <a href="/">Lumet Hugo</a> | <a href="https://github.com/AlexLoup33" target="_blank">Lou-Poueyou Alexandre</a></p>
+  <footer>
+    <div class="footer-container">
+      <div class="footer-element">
+        <p>Contributeurs : <a href="/">Sanson Marie</a> | <a href="/">Lumet Hugo</a> | <a
+            href="https://github.com/AlexLoup33" target="_blank">Lou-Poueyou Alexandre</a></p>
         <p><a href="https://gitlab.emi.u-bordeaux.fr/pdl-l3/teams/2024/l1/l1e">Code source</a> - © PDL L1E - 2024</p>
-    </div>     
-  </div>
-</footer>
+      </div>
+    </div>
+  </footer>
 </template>

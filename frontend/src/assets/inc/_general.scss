@@ -3,30 +3,11 @@ body {
     color: $black;
     font-family: $sofia;
 
-    .spacer{
-        margin-top: 7em;
-        margin-bottom: 7em;
-    }
-
-    footer{
-        background-color: $dark-brown;
-        color: $light-gray;
-        text-align: center;
-        padding: 1em;
-        font-size: size(12);
-
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-
-        a {
-            color: $light-gray;
-            text-decoration: none;
-            font-weight: bold;
-        }
-    }
-
     #app {
+        height: calc(100vh - 120px);
+        box-sizing: border-box;
+        padding-top: 60px;
+        padding-bottom: 60px;
         text-align: center;
 
         .error {

@@ -1,151 +1,162 @@
-.header {
-    margin-bottom: 3em;
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-bottom: 0em;
+    width: 100%;
+    padding: 0 1.5em;
+    z-index: 1000;
 
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
+    .header {
+        margin-bottom: 3em;
+        background-color: $beige;
 
-        li {
-            float: left;
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
 
-            a {
-                display: block;
-                color: $black;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-                font-size: size(18);
-                position: relative;
+            li {
+                float: left;
 
-                &:before {
-                    content: ''; // Create pseudo-element for the underline effect
-                    position: absolute;
-                    left: 10px;
-                    bottom: 0; // Position the underline just below the text
-                    width: 0; // Start with no width
-                    height: 1.5px; // Set the height of the underline
-                    background-color: currentColor; // Use the link's text color
-                    transform: translateY(-10px);
-                    transition: width 0.5s ease; // Transition only the width property
-                }
-
-                &:hover {
-                    font-size: size(20);
-                    transition: all 0.3s ease;
-                    font-weight: 600;
+                a {
+                    display: block;
+                    color: $black;
+                    text-align: center;
+                    padding: 14px 16px;
+                    text-decoration: none;
+                    font-size: size(18);
+                    position: relative;
 
                     &:before {
-                        width: 80%;
+                        content: ''; // Create pseudo-element for the underline effect
+                        position: absolute;
+                        left: 10px;
+                        bottom: 0; // Position the underline just below the text
+                        width: 0; // Start with no width
+                        height: 1.5px; // Set the height of the underline
+                        background-color: currentColor; // Use the link's text color
+                        transform: translateY(-10px);
+                        transition: width 0.5s ease; // Transition only the width property
+                    }
+
+                    &:hover {
+                        font-size: size(20);
+                        transition: all 0.3s ease;
+                        font-weight: 600;
+
+                        &:before {
+                            width: 80%;
+                        }
                     }
                 }
             }
         }
     }
-}
 
-.burger-menu {
-    display: none;
-    margin-bottom: 4.5em;
-
-    .burger-nav {
+    .burger-menu {
         display: none;
-        position: absolute;
-        width: 100%;
-        height: 100vh;
-        right: 0;
-        background-color: $beige;
+        margin-bottom: 4.5em;
 
-        ul {
-            list-style: none;
-            padding: 0;
+        .burger-nav {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            right: 0;
+            background-color: $beige;
+
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            ul li {
+                padding: 10px;
+
+                a {
+                    color: $black;
+                    text-align: center;
+                    padding: 14px 16px;
+                    text-decoration: none;
+                }
+            }
         }
 
-        ul li {
-            padding: 10px;
+        .burger-nav.active {
+            display: block !important;
+        }
 
-            a {
-                color: $black;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
+        .burger-icon {
+            width: 2em;
+            height: auto;
+            padding: 1em;
+            position: fixed;
+            top: 0.5em;
+            left: 1em;
+
+            display: flex;
+
+            label {
+                display: flex;
+                flex-direction: column;
+                width: 70px;
+                cursor: pointer;
+            }
+
+            label span {
+                background: $black;
+                border-radius: 10px;
+                height: 0.5em;
+                margin: 0.1em 0;
+                transition: .4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            }
+
+            span:nth-of-type(1) {
+                width: 50%;
+            }
+
+            span:nth-of-type(2) {
+                width: 100%;
+            }
+
+            span:nth-of-type(3) {
+                width: 75%;
+            }
+
+            input[type="checkbox"] {
+                display: none;
+            }
+
+            input[type="checkbox"]:checked~span:nth-of-type(1) {
+                transform-origin: bottom;
+                transform: rotatez(45deg) translate(8px, 0px)
+            }
+
+            input[type="checkbox"]:checked~span:nth-of-type(2) {
+                transform-origin: top;
+                transform: rotatez(-45deg)
+            }
+
+            input[type="checkbox"]:checked~span:nth-of-type(3) {
+                transform-origin: bottom;
+                width: 50%;
+                transform: translate(30px, -11px) rotatez(45deg);
             }
         }
     }
 
-    .burger-nav.active {
-        display: block !important;
-    }
 
-    .burger-icon {
-        width: 2em;
-        height: auto;
-        padding: 1em;
-        position: fixed;
-        top: 0.5em;
-        left: 1em;
 
-        display: flex;
-
-        label {
-            display: flex;
-            flex-direction: column;
-            width: 70px;
-            cursor: pointer;
-        }
-
-        label span {
-            background: $black;
-            border-radius: 10px;
-            height: 0.5em;
-            margin: 0.1em 0;
-            transition: .4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-        }
-
-        span:nth-of-type(1) {
-            width: 50%;
-        }
-
-        span:nth-of-type(2) {
-            width: 100%;
-        }
-
-        span:nth-of-type(3) {
-            width: 75%;
-        }
-
-        input[type="checkbox"] {
+    @media screen and (max-width: 768px) {
+        .header {
             display: none;
         }
 
-        input[type="checkbox"]:checked~span:nth-of-type(1) {
-            transform-origin: bottom;
-            transform: rotatez(45deg) translate(8px, 0px)
+        //Display only the burger icon
+        .burger-menu {
+            display: block;
         }
-
-        input[type="checkbox"]:checked~span:nth-of-type(2) {
-            transform-origin: top;
-            transform: rotatez(-45deg)
-        }
-
-        input[type="checkbox"]:checked~span:nth-of-type(3) {
-            transform-origin: bottom;
-            width: 50%;
-            transform: translate(30px, -11px) rotatez(45deg);
-        }
-    }
-}
-
-
-
-@media screen and (max-width: 768px) {
-    .header {
-        display: none;
-    }
-
-    //Display only the burger icon
-    .burger-menu {
-        display: block;
     }
 }

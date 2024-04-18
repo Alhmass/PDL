@@ -1,0 +1,20 @@
+footer {
+    padding: 1.5em 3em;
+    color: $light-gray;
+    background-color: $beige;
+    text-align: center;
+    font-size: size(12);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+    a {
+        color: $light-gray;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .footer-container {
+        padding: 1em;
+    }
+}
