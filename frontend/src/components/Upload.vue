@@ -4,7 +4,7 @@ import { api } from '@/http-api';
 
 const target = ref<HTMLInputElement>();
 const emit = defineEmits(['response']);
-const tags = ref<string>("");
+const tags = ref<string[]>([]);
 const props = defineProps({ showDiv: { type: Boolean, default: true } });
 const inputTagVal = ref("");
 function submitFile() {
@@ -15,8 +15,8 @@ function submitFile() {
     let formData = new FormData();
     formData.append("file", file);
     if (tags.value.length > 1)
-      formData.append("tags", tags.value);
-    tags.value = "";
+      formData.append("tags", tags.value.join('@'));
+    tags.value = [];
     api.createImage(formData).then(() => {
       if (target.value !== undefined)
         target.value.value = '';
@@ -32,13 +32,15 @@ function handleFileUpload(event: Event) {
 }
 
 function add_tag() {
-  if (!tags.value.includes(inputTagVal.value)) {
-    if (tags.value)
-      tags.value = tags.value + '@' + inputTagVal.value;
-    else
-      tags.value = inputTagVal.value;
+  if (inputTagVal.value.length !== 0) {
+    if (!tags.value.includes(inputTagVal.value)) {
+      tags.value.push(inputTagVal.value);
+      inputTagVal.value = "";
+    }
   }
-  inputTagVal.value = "";
+}
+function delete_tag(tagToRemove: string) {
+  tags.value = tags.value.filter((element) => element !== tagToRemove);
 }
 </script>
 
@@ -51,11 +53,16 @@ function add_tag() {
     </div>
     <div>
       <div v-if="target?.value && props.showDiv" class="tags">
-        <div class="tagtextarea">
-          <span v-if="tags" class="tagview">{{ tags }}</span>
+        <div class="tagsContainer">
+          <ul class="tagList" v-if="tags">
+            <li class="tag" v-for="tag in tags">
+              <span class="tagText">{{ tag }}</span>
+              <span class="deleteIcon" @click="delete_tag(tag)">&times;</span>
+            </li>
+          </ul>
           <input v-model="inputTagVal" type="text" class="taginput" @keyup.enter="add_tag()">
+          <button @click="add_tag()">modify</button>
         </div>
-        <button @click="add_tag()">add tag</button>
       </div>
       <button v-if="target?.value" @click="submitFile">Submit</button>
       <button v-else disabled>Submit</button>
