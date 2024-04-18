@@ -89,6 +89,9 @@ body {
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-wrap: wrap;
+            width: 50%;
+            margin: 0 auto;
 
             .tag{
                 border-radius: 3rem;
