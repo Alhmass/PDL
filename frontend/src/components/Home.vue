@@ -103,8 +103,10 @@ function loadImageByTag() {
       </div>
     </div>
     <hr />
-    <div v-if="imageToDisplay" class="image_container">
-      <Image v-for="image in imageToDisplay" :key="image.id" :id="image.id" @click="utils.gotoImage(image.id)" />
+    <div class="imageSection">
+      <div v-if="imageToDisplay" class="image_container">
+        <Image v-for="image in imageToDisplay" :key="image.id" :id="image.id" @click="utils.gotoImage(image.id)" />
+      </div>
     </div>
   </div>
 </template>
