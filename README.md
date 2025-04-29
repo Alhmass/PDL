@@ -41,10 +41,10 @@ Les technologies utilisées pour ce projet sont :
 Télécharger le projet en utilisant la commande suivante : 
 
 - depuis HTTPS :
-`git clone [Repo url]`
+`git clone https://github.com/Alhmass/PDL.git`
 
 - depuis SSH :
-`git clone [Repo url]`
+`git clone git@github.com:Alhmass/PDL.git`
 
 ## Configuration
 
