@@ -47,10 +47,11 @@ Télécharger le projet en utilisant la commande suivante :
 `git clone [Repo url]`
 
 ## Configuration
- 
-Avant de compiler le projet, configurez une base de données PostgreSQL et définissez les variables d’environnement suivantes :
+
+Avant de compiler le projet, configurez une base de données PostgreSQL avec l'extension pgVector et définissez les variables d’environnement suivantes :
 
 - `DATABASE_NAME` : nom de la base
+- `DATABASE_USER` : nom d'utilisateur
 - `DATABASE_PORT` : port PostgreSQL (par défaut : 5432)
 - `DATABASE_PASSWORD` : mot de passe d’accès
 
@@ -58,7 +59,7 @@ Pour compiler le projet :
 `mvn clean compile`
 
 Dès que le projet est compilé, il suffit de lancer le frontend et le backend pour pouvoir utiliser l'application avec la commande suivante : 
-`mvn backend --projects backend spring-boot:run`
+`mvn --projects backend spring-boot:run`
 
 A noter : l'addresse de l'application pour la machine locale est http://localhost:8080
 

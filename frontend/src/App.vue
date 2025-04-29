@@ -79,7 +79,7 @@ function toggleBurgerMenu() {
     <div class="footer-container">
       <div class="footer-element">
         <p>Contributeurs : Sanson Marie | Lumet Hugo | Lou-Poueyou Alexandre</p>
-        <p><a href="https://gitlab.emi.u-bordeaux.fr/pdl-l3/teams/2024/l1/l1e">Code source</a> - © PDL L1E - 2024</p>
+        <p><a href="https://github.com/Alhmass/PDL">Code source</a> - © PDL L1E - 2024</p>
       </div>
     </div>
   </footer>
