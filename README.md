@@ -79,6 +79,6 @@ Le projet a était testé et fonctionne sur les systèmes d'exploitations et nav
 
 ### Auteurs
 
-- [Marie Sanson]() - masanson@u-bordeaux.fr 
+- Marie Sanson - masanson@u-bordeaux.fr 
 - [Lumet Hugo](https://github.com/Alhmass) - hugo.lumet@protonmail.com
 - [Alexandre Lou-Poueyou](https://github.com/AlexLoup33) - alexandre.lou-poueyou@etu.u-bordeaux.fr
